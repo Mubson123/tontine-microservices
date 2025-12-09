@@ -22,7 +22,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
     @Id

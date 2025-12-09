@@ -299,8 +299,8 @@ components:
       required:
         - title
         - gender
-        - firstName
-        - lastName
+        - firstname
+        - lastname
         - email
         - birthdate
         - phone
@@ -312,10 +312,10 @@ components:
           $ref: '#/components/schemas/Title'
         gender:
           $ref: '#/components/schemas/Gender'
-        firstName:
+        firstname:
           type: string
           example: John
-        lastName:
+        lastname:
           type: string
           example: Doe
         email:
@@ -347,8 +347,8 @@ components:
         - updatedAt
         - title
         - gender
-        - firstName
-        - lastName
+        - firstname
+        - lastname
         - email
         - birthdate
         - phone
@@ -372,10 +372,10 @@ components:
           $ref: '#/components/schemas/Title'
         gender:
           $ref: '#/components/schemas/Gender'
-        firstName:
+        firstname:
           type: string
           example: John
-        lastName:
+        lastname:
           type: string
           example: Doe
         email:
@@ -686,5 +686,5 @@ components:
             error: 'Bad Request'
             message: 'The request was invalid or cannot be served'
             fieldErrors:
-              firstName: 'First name is required'
+              firstname: 'First name is required'
               email: 'Email format is invalid'
