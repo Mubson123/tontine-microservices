@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.tontine.customer.proto;
+option java_multiple_files = true;
+
+message CustomerEvent {
+  string customerId = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string email = 4;
+  string event_type = 5;
+}
