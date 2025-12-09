@@ -1,0 +1,6 @@
+server:
+  port: 7071
+
+spring:
+  application:
+    name: customer-service

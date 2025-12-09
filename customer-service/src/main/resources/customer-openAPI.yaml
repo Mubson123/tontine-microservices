@@ -1,0 +1,702 @@
+openapi: 3.1.0
+info:
+  title: Customer Service
+  description: Customer Service
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:7071/api'
+
+security:
+  - bearerAuth: [ ]
+
+tags:
+  - name: Customer Controller
+    description: Customer Service REST Endpoints
+  - name: Id Card Controller
+    description: Id Card Service REST Endpoints
+
+paths:
+  /customers:
+    get:
+      tags:
+        - Customer Controller
+      summary: Returns a list of all customers
+      description: Returns a list of all customers
+      operationId: getAllCustomers
+      responses:
+        '200':
+          description: Successfully retrieved customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+    post:
+      tags:
+        - Customer Controller
+      summary: Create a new customer
+      description: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+        required: true
+      responses:
+        '201':
+          description: Customer successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+
+  /customers/{customerId}:
+    get:
+      tags:
+        - Customer Controller
+      summary: Get a customer by ID
+      description: Get a customer by ID
+      operationId: getCustomerById
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        '200':
+          description: Successfully retrieved customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+    put:
+      tags:
+        - Customer Controller
+      summary: Update an existing customer
+      description: Update an existing customer
+      operationId: updateCustomer
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+        required: true
+      responses:
+        '202':
+          description: Customer successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+    delete:
+      tags:
+        - Customer Controller
+      summary: Delete a customer by ID
+      description: Delete a customer by ID
+      operationId: deleteCustomerById
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        '204':
+          description: Customer successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+  /customers/{customerId}/id-cards:
+    get:
+      tags:
+        - Id Card Controller
+      summary: Get ID cards for a customer
+      description: Get ID cards for a customer
+      operationId: getIdCardsByCustomerId
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        '200':
+          description: Successfully retrieved ID cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdCardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+    post:
+      tags:
+        - Id Card Controller
+      summary: Create an ID card for a customer
+      description: Create an ID card for a customer
+      operationId: createIdCard
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdCardRequest'
+        required: true
+      responses:
+        '201':
+          description: ID card successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdCardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+
+  /customers/{customerId}/id-cards/{idCardId}:
+    get:
+      tags:
+        - Id Card Controller
+      summary: Get an ID card by ID for a customer
+      description: Get an ID card by ID for a customer
+      operationId: getIdCardById
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+        - $ref: '#/components/parameters/idCardId'
+      responses:
+        '200':
+          description: Successfully retrieved ID card
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdCardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+    put:
+      tags:
+        - Id Card Controller
+      summary: Update an ID card for a customer
+      description: Update an ID card for a customer
+      operationId: updateIdCard
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+        - $ref: '#/components/parameters/idCardId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdCardRequest'
+        required: true
+      responses:
+        '202':
+          description: ID card successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdCardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+    delete:
+      tags:
+        - Id Card Controller
+      summary: Delete an ID card by ID for a customer
+      description: Delete an ID card by ID for a customer
+      operationId: deleteIdCardById
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+        - $ref: '#/components/parameters/idCardId'
+      responses:
+        '204':
+          description: ID card successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CustomerRequest:
+      type: object
+      required:
+        - Title
+        - Gender
+        - firstName
+        - lastName
+        - email
+        - birthdate
+        - phone
+        - maritalStatus
+        - roles
+        - status
+        - address
+      properties:
+        Title:
+          $ref: '#/components/schemas/Title'
+        Gender:
+          $ref: '#/components/schemas/Gender'
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example:
+        birthdate:
+          type: string
+          format: date
+          example: '1990-01-01'
+        phone:
+          type: string
+          example: '+1234567890'
+        maritalStatus:
+          $ref: '#/components/schemas/MaritalStatus'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        status:
+          $ref: '#/components/schemas/Status'
+        address:
+          $ref: '#/components/schemas/Address'
+
+    CustomerResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - Title
+        - Gender
+        - firstName
+        - lastName
+        - email
+        - birthdate
+        - phone
+        - maritalStatus
+        - roles
+        - status
+        - address
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2023-01-02T12:00:00Z'
+        Title:
+          $ref: '#/components/schemas/Title'
+        Gender:
+          $ref: '#/components/schemas/Gender'
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example:
+        birthdate:
+          type: string
+          format: date
+          example: '1990-01-01'
+        phone:
+          type: string
+          example: '+1234567890'
+        maritalStatus:
+          $ref: '#/components/schemas/MaritalStatus'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        status:
+          $ref: '#/components/schemas/Status'
+        address:
+          $ref: '#/components/schemas/Address'
+
+    Address:
+      type: object
+      required:
+        - street
+        - city
+        - state
+        - zipCode
+      properties:
+        street:
+          type: string
+          example: '123 Main St'
+        city:
+          type: string
+          example: 'Anytown'
+        state:
+          type: string
+          example: 'CA'
+        zipCode:
+          type: string
+          example: '12345'
+        country:
+          type: string
+          example: 'USA'
+
+    IdCardRequest:
+      type: object
+      required:
+        - customerId
+        - nationality
+        - cardNumber
+        - issueDate
+        - expiryDate
+        - issuedBy
+        - documentType
+      properties:
+        customerId:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426'
+        nationality:
+          type: string
+          example: 'German'
+        cardNumber:
+          type: string
+          example: '1234567890123456'
+        issueDate:
+          type: string
+          format: date
+          example: '2020-01-01'
+        expiryDate:
+          type: string
+          format: date
+          example: '2030-01-01'
+        issuedBy:
+          type: string
+          example: 'Government of Germany'
+        documentType:
+          $ref: '#/components/schemas/DocumentType'
+
+    IdCardResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - customerId
+        - nationality
+        - cardNumber
+        - issueDate
+        - expiryDate
+        - issuedBy
+        - documentType
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2023-01-02T12:00:00Z'
+        customerId:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        nationality:
+          type: string
+          example: 'German'
+        cardNumber:
+          type: string
+          example: '1234567890123456'
+        issueDate:
+          type: string
+          format: date
+          example: '2020-01-01'
+        expiryDate:
+          type: string
+          format: date
+          example: '2030-01-01'
+        issuedBy:
+          type: string
+          example: 'Government of Germany'
+        documentType:
+          $ref: '#/components/schemas/DocumentType'
+
+    MaritalStatus:
+      type: string
+      enum:
+        - SINGLE
+        - MARRIED
+        - DIVORCED
+        - WIDOWED
+      example: SINGLE
+
+    Title:
+      type: string
+      enum:
+        - PHD
+        - DR
+        - MSC
+        - BSC
+        - ING
+      example: PHD
+
+    Gender:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+        - OTHER
+      example: MALE
+
+    DocumentType:
+      type: string
+      enum:
+        - ID_CARD
+        - PASSPORT
+        - DRIVER_LICENSE
+      example: ID_CARD
+
+    Role:
+      type: string
+      enum:
+        - ADMIN
+        - USER
+        - GUEST
+        - PRESIDENT
+        - VICE_PRESIDENT
+        - SECRETARY
+        - VICE_SECRETARY
+        - TREASURER
+        - VICE_TREASURER
+        - SENSOR
+        - VICE_SENSOR
+        - MEMBER
+        - NOT_MEMBER
+        - ASSOCIATE
+        - VOLUNTEER
+        - FOUNDER
+      description: Role of the user in the system
+      example: MEMBER
+
+    Status:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - SUSPENDED
+        - BANNED
+      description: Status of the user in the system
+      example: ACTIVE
+
+    Error:
+      type: object
+      required:
+        - timestamp
+        - status
+        - error
+        - message
+        - path
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        path:
+          type: string
+          example: /api/customers
+        message:
+          type: string
+          example: An unexpected error occurred
+        fieldErrors:
+          type: object
+          description: Field-specific errors
+          additionalProperties:
+            type: string
+
+
+  parameters:
+    customerId:
+      name: customerId
+      in: path
+      required: true
+      description: Unique identifier for the customer
+      schema:
+        type: string
+        format: uuid
+        example: '123e4567-e89b-12d3-a456-426614174000'
+
+    idCardId:
+      name: idCardId
+      in: path
+      required: true
+      description: Unique identifier for the ID card
+      schema:
+        type: string
+        format: uuid
+        example: '123e4567-e89b-12d3-a456-426614174001'
+
+
+  responses:
+    Unauthorized:
+      description: Unauthorized Access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: '2023-01-01T12:00:00Z'
+            status: 401
+            error: 'Unauthorized'
+            message: 'Access token is missing or invalid'
+
+
+    NotFound:
+      description: Customer not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: '2023-01-01T12:00:00Z'
+            status: 404
+            error: 'Not Found'
+            message: 'Customer with the specified ID does not exist'
+
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: '2023-01-01T12:00:00Z'
+            status: 500
+            error: 'Internal Server Error'
+            message: 'An unexpected error occurred while processing the request'
+
+
+    DefaultError:
+      description: Default error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: '2023-01-01T12:00:00Z'
+            status: 500
+            error: 'Internal Server Error'
+            message: 'An unexpected error occurred'
+
+
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: '2023-01-01T12:00:00Z'
+            status: 400
+            error: 'Bad Request'
+            message: 'The request was invalid or cannot be served'
+            fieldErrors:
+              firstName: 'First name is required'
+              email: 'Email format is invalid'
