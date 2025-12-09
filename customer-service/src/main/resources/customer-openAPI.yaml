@@ -12,8 +12,8 @@ security:
 tags:
   - name: Customer Controller
     description: Customer Service REST Endpoints
-  - name: Id Card Controller
-    description: Id Card Service REST Endpoints
+  - name: Id Document Controller
+    description: Id Document Service REST Endpoints
 
 paths:
   /customers:
@@ -130,7 +130,7 @@ paths:
         - Customer Controller
       summary: Delete a customer by ID
       description: Delete a customer by ID
-      operationId: deleteCustomerById
+      operationId: deleteCustomer
       parameters:
         - $ref: '#/components/parameters/customerId'
       responses:
@@ -145,24 +145,49 @@ paths:
         default:
           $ref: '#/components/responses/DefaultError'
 
-  /customers/{customerId}/id-cards:
+
+  /customers/id-documents:
     get:
       tags:
-        - Id Card Controller
-      summary: Get ID cards for a customer
-      description: Get ID cards for a customer
-      operationId: getIdCardsByCustomerId
-      parameters:
-        - $ref: '#/components/parameters/customerId'
+        - Id Document Controller
+      summary: Returns a list of all ID Documents
+      description: Returns a list of all ID Documents
+      operationId: getAllIdDocuments
       responses:
         '200':
-          description: Successfully retrieved ID cards
+          description: Successfully retrieved ID Documents
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/IdCardResponse'
+                  $ref: '#/components/schemas/IdDocumentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+
+  /customers/{customerId}/id-documents:
+    get:
+      tags:
+        - Id Document Controller
+      summary: Get ID Documents for a customer
+      description: Get ID Documents for a customer
+      operationId: getIdDocumentsByCustomerId
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        '200':
+          description: Successfully retrieved ID Documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdDocumentResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -174,25 +199,25 @@ paths:
 
     post:
       tags:
-        - Id Card Controller
-      summary: Create an ID card for a customer
-      description: Create an ID card for a customer
-      operationId: createIdCard
+        - Id Document Controller
+      summary: Create an ID Document for a customer
+      description: Create an ID Document for a customer
+      operationId: createIdDocument
       parameters:
         - $ref: '#/components/parameters/customerId'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdCardRequest'
+              $ref: '#/components/schemas/IdDocumentRequest'
         required: true
       responses:
         '201':
-          description: ID card successfully created
+          description: ID Document successfully created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdCardResponse'
+                $ref: '#/components/schemas/IdDocumentResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -205,23 +230,23 @@ paths:
           $ref: '#/components/responses/DefaultError'
 
 
-  /customers/{customerId}/id-cards/{idCardId}:
+  /customers/{customerId}/id-documents/{idDocumentId}:
     get:
       tags:
-        - Id Card Controller
-      summary: Get an ID card by ID for a customer
-      description: Get an ID card by ID for a customer
-      operationId: getIdCardById
+        - Id Document Controller
+      summary: Get an ID Document by ID for a customer
+      description: Get an ID Document by ID for a customer
+      operationId: getIdDocumentById
       parameters:
         - $ref: '#/components/parameters/customerId'
-        - $ref: '#/components/parameters/idCardId'
+        - $ref: '#/components/parameters/idDocumentId'
       responses:
         '200':
-          description: Successfully retrieved ID card
+          description: Successfully retrieved ID Document
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdCardResponse'
+                $ref: '#/components/schemas/IdDocumentResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -233,26 +258,26 @@ paths:
 
     put:
       tags:
-        - Id Card Controller
-      summary: Update an ID card for a customer
-      description: Update an ID card for a customer
-      operationId: updateIdCard
+        - Id Document Controller
+      summary: Update an ID Document for a customer
+      description: Update an ID Document for a customer
+      operationId: updateIdDocument
       parameters:
         - $ref: '#/components/parameters/customerId'
-        - $ref: '#/components/parameters/idCardId'
+        - $ref: '#/components/parameters/idDocumentId'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdCardRequest'
+              $ref: '#/components/schemas/IdDocumentRequest'
         required: true
       responses:
         '202':
-          description: ID card successfully updated
+          description: ID Document successfully updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdCardResponse'
+                $ref: '#/components/schemas/IdDocumentResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -266,16 +291,16 @@ paths:
 
     delete:
       tags:
-        - Id Card Controller
-      summary: Delete an ID card by ID for a customer
-      description: Delete an ID card by ID for a customer
-      operationId: deleteIdCardById
+        - Id Document Controller
+      summary: Delete an ID Document by ID for a customer
+      description: Delete an ID Document by ID for a customer
+      operationId: deleteIdDocument
       parameters:
         - $ref: '#/components/parameters/customerId'
-        - $ref: '#/components/parameters/idCardId'
+        - $ref: '#/components/parameters/idDocumentId'
       responses:
         '204':
-          description: ID card successfully deleted
+          description: ID Document successfully deleted
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -423,25 +448,20 @@ components:
           type: string
           example: 'USA'
 
-    IdCardRequest:
+    IdDocumentRequest:
       type: object
       required:
-        - customerId
         - nationality
-        - cardNumber
+        - documentNumber
         - issueDate
         - expiryDate
         - issuedBy
         - documentType
       properties:
-        customerId:
-          type: string
-          format: uuid
-          example: '123e4567-e89b-12d3-a456-426'
         nationality:
           type: string
           example: 'German'
-        cardNumber:
+        documentNumber:
           type: string
           example: '1234567890123456'
         issueDate:
@@ -458,7 +478,7 @@ components:
         documentType:
           $ref: '#/components/schemas/DocumentType'
 
-    IdCardResponse:
+    IdDocumentResponse:
       type: object
       required:
         - id
@@ -466,7 +486,7 @@ components:
         - updatedAt
         - customerId
         - nationality
-        - cardNumber
+        - documentNumber
         - issueDate
         - expiryDate
         - issuedBy
@@ -491,7 +511,7 @@ components:
         nationality:
           type: string
           example: 'German'
-        cardNumber:
+        documentNumber:
           type: string
           example: '1234567890123456'
         issueDate:
@@ -610,11 +630,11 @@ components:
         format: uuid
         example: '123e4567-e89b-12d3-a456-426614174000'
 
-    idCardId:
-      name: idCardId
+    idDocumentId:
+      name: idDocumentId
       in: path
       required: true
-      description: Unique identifier for the ID card
+      description: Unique identifier for the ID Document
       schema:
         type: string
         format: uuid

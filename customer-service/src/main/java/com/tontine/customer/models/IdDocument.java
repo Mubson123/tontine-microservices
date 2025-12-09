@@ -19,7 +19,7 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class IdCard {
+public class IdDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -31,8 +31,8 @@ public class IdCard {
     private UUID customerId;
     @NotBlank(message = "nationality required")
     private String nationality;
-    @NotBlank(message = "card number required")
-    private String cardNumber;
+    @NotBlank(message = "document number required")
+    private String documentNumber;
     @NotNull(message = "issue date required")
     private LocalDate issueDate;
     @NotNull(message = "expiry date required")
