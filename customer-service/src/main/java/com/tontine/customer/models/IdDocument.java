@@ -27,8 +27,10 @@ public class IdDocument {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @org.hibernate.validator.constraints.UUID
-    private UUID customerId;
+    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", unique = true)
+    private Customer customer;
     @NotBlank(message = "nationality required")
     private String nationality;
     @NotBlank(message = "document number required")

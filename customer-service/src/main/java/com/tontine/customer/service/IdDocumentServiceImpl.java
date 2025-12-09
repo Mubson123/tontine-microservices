@@ -1,13 +1,15 @@
 package com.tontine.customer.service;
 
+import com.tontine.customer.exception.CustomerNotFoundException;
 import com.tontine.customer.exception.IdDocumentAlreadyExistsException;
 import com.tontine.customer.exception.IdDocumentExpiredException;
 import com.tontine.customer.exception.IdDocumentNotFoundException;
 import com.tontine.customer.mapper.CustomerMapper;
 import com.tontine.customer.model.ApiIdDocumentRequest;
 import com.tontine.customer.model.ApiIdDocumentResponse;
+import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.IdDocument;
-import com.tontine.customer.models.utils.DocumentType;
+import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.repository.IdDocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class IdDocumentServiceImpl implements IdDocumentService {
 
     private static final String DOCUMENT_NOT_FOUND = "Identification document for Customer %s not found";
     private final IdDocumentRepository idDocumentRepository;
+    private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
     @Override
@@ -53,8 +56,11 @@ public class IdDocumentServiceImpl implements IdDocumentService {
                     "Identification document of type %s already exists"
                             .formatted(apiIdDocumentRequest.getDocumentType().name()));
         }
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(
+                        "Customer with ID %s not found".formatted(customerId)));
         IdDocument idDocument = customerMapper.toIdDocument(apiIdDocumentRequest);
-        idDocument.setCustomerId(customerId);
+        idDocument.setCustomer(customer);
         idDocument = idDocumentRepository.save(idDocument);
         return customerMapper.toApiIdDocumentResponse(idDocument);
     }
