@@ -1,11 +1,13 @@
 package com.tontine.customer.models.utils;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static com.tontine.customer.constance.Constance.REQUIRED;
 
 @Data
 @Builder
@@ -13,14 +15,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
-    @NotNull(message = "street required")
+    @Size(min = 3, message = "street " + REQUIRED)
     private String street;
-    @NotNull(message = "zipCode required")
+    @Size(min = 5, max = 5, message = "zipCode must be a 5-digit number")
     private String zipCode;
-    @NotNull(message = "city required")
+    @Size(min = 3, message = "city " + REQUIRED)
     private String city;
-    @NotNull(message = "state required")
+    @Size(min = 3, message = "state " + REQUIRED)
     private String state;
-    @NotNull(message = "country required")
+    @Size(min = 3, message = "country " + REQUIRED)
     private String country;
 }
