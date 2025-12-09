@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
             customerMapper.updateCustomerFromRequest(apiCustomerRequest, customer);
-        return null;
+        return customerMapper.toApiCustomerResponse(customer);
     }
 
     @Override

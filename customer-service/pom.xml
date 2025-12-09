@@ -253,10 +253,22 @@
 							<generateModelTests>false</generateModelTests>
 							<modelNamePrefix>Api</modelNamePrefix>
 							<skipOverwrite>false</skipOverwrite>
+
+							<typeMappings>
+								<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+								<typeMapping>ZonedDateTime=java.time.LocalDateTime</typeMapping>
+								<typeMapping>DateTime=java.time.LocalDateTime</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>OffsetDateTime=java.time.LocalDateTime</importMapping>
+								<importMapping>ZonedDateTime=java.time.LocalDateTime</importMapping>
+								<importMapping>DateTime=java.time.LocalDateTime</importMapping>
+							</importMappings>
+
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<useSpringBoot3>true</useSpringBoot3>
-								<dateLibrary>java8</dateLibrary>
+								<dateLibrary>java8-localdate</dateLibrary>
 								<useOptional>false</useOptional>
 								<apiNamePrefix>Api</apiNamePrefix>
 								<serializableModel>true</serializableModel>

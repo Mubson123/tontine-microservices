@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -32,13 +33,14 @@ public class Customer {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+    @NotNull(message = "title required")
     @Enumerated(EnumType.STRING)
     private Title title;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @NotBlank(message = "firstname required")
+    @Size(min = 3, message = "firstname required or must have at least 3 characters")
     private String firstname;
-    @NotBlank(message = "lastname required")
+    @Size(min = 3, message = "lastname required or must have at least 3 characters")
     private String lastname;
     @Email(message = "email should be valid", regexp = Constance.regex)
     private String email;
@@ -46,14 +48,17 @@ public class Customer {
     private LocalDate birthdate;
     @NotBlank(message = "phone required")
     private String phone;
+    @NotNull(message = "maritalStatus required")
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     @Valid
+    @NotNull(message = "positions required")
     @ElementCollection
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "customer_positions", joinColumns = @JoinColumn(name = "customer_id"))
     private Set<Position> positions = new LinkedHashSet<>();
+    @NotNull(message = "address required")
     @Embedded
     private Address address;
 }
