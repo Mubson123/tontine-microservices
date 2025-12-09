@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Customer Service
-  description: Customer Service
+  description: Customer Service For Tontine Application
   version: 1.0.0
 servers:
   - url: 'http://localhost:7071/api'
@@ -297,21 +297,20 @@ components:
     CustomerRequest:
       type: object
       required:
-        - Title
-        - Gender
+        - title
+        - gender
         - firstName
         - lastName
         - email
         - birthdate
         - phone
         - maritalStatus
-        - roles
-        - status
+        - positions
         - address
       properties:
-        Title:
+        title:
           $ref: '#/components/schemas/Title'
-        Gender:
+        gender:
           $ref: '#/components/schemas/Gender'
         firstName:
           type: string
@@ -322,7 +321,8 @@ components:
         email:
           type: string
           format: email
-          example:
+          pattern: '^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
+          example: john.doe@email.com
         birthdate:
           type: string
           format: date
@@ -332,12 +332,10 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        roles:
+        positions:
           type: array
           items:
-            $ref: '#/components/schemas/Role'
-        status:
-          $ref: '#/components/schemas/Status'
+            $ref: '#/components/schemas/Position'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -347,16 +345,15 @@ components:
         - id
         - createdAt
         - updatedAt
-        - Title
-        - Gender
+        - title
+        - gender
         - firstName
         - lastName
         - email
         - birthdate
         - phone
         - maritalStatus
-        - roles
-        - status
+        - positions
         - address
       properties:
         id:
@@ -371,9 +368,9 @@ components:
           type: string
           format: date-time
           example: '2023-01-02T12:00:00Z'
-        Title:
+        title:
           $ref: '#/components/schemas/Title'
-        Gender:
+        gender:
           $ref: '#/components/schemas/Gender'
         firstName:
           type: string
@@ -394,12 +391,10 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        roles:
+        positions:
           type: array
           items:
-            $ref: '#/components/schemas/Role'
-        status:
-          $ref: '#/components/schemas/Status'
+            $ref: '#/components/schemas/Position'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -410,19 +405,20 @@ components:
         - city
         - state
         - zipCode
+        - country
       properties:
         street:
           type: string
           example: '123 Main St'
+        zipCode:
+          type: string
+          example: '12345'
         city:
           type: string
           example: 'Anytown'
         state:
           type: string
           example: 'CA'
-        zipCode:
-          type: string
-          example: '12345'
         country:
           type: string
           example: 'USA'
@@ -545,9 +541,11 @@ components:
         - ID_CARD
         - PASSPORT
         - DRIVER_LICENSE
+        - BIRTH_CERTIFICATE
+        - OTHER
       example: ID_CARD
 
-    Role:
+    Position:
       type: string
       enum:
         - ADMIN
@@ -566,18 +564,8 @@ components:
         - ASSOCIATE
         - VOLUNTEER
         - FOUNDER
-      description: Role of the user in the system
+      description: Position of the user in the system
       example: MEMBER
-
-    Status:
-      type: string
-      enum:
-        - ACTIVE
-        - INACTIVE
-        - SUSPENDED
-        - BANNED
-      description: Status of the user in the system
-      example: ACTIVE
 
     Error:
       type: object
