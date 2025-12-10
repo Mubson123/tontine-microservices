@@ -1,6 +1,6 @@
 package com.tontine.customer.models.utils;
 
-public enum Role {
+public enum MemberRole {
     ADMIN,
     GUEST,
     PRESIDENT,

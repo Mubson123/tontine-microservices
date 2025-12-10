@@ -40,7 +40,7 @@ public class Customer {
     private String firstname;
     @Size(min = 3, message = "lastname required or must have at least 3 characters")
     private String lastname;
-    @Email(message = "email should be valid", regexp = Constance.regex)
+    @Email(message = "email should be valid", regexp = Constance.REGEX)
     private String email;
     @NotNull(message = "birthdate required")
     private LocalDate birthdate;
@@ -51,7 +51,7 @@ public class Customer {
     private MaritalStatus maritalStatus;
     @NotNull(message = "status required")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private MemberStatus memberStatus;
     @Valid
     @NotNull(message = "address required")
     @Embedded
@@ -63,10 +63,10 @@ public class Customer {
             String email,
             String phone,
             MaritalStatus maritalStatus,
-            Status status,
+            MemberStatus memberStatus,
             Address address
     ) {
-        if (status == Status.SUSPENDED) {
+        if (memberStatus == MemberStatus.SUSPENDED) {
             throw new IllegalArgumentException("Cannot update profile of a suspended customer");
         }
         this.firstname = firstname;
@@ -74,14 +74,30 @@ public class Customer {
         this.phone = phone;
         this.email = email;
         this.maritalStatus = maritalStatus;
-        this.status = status;
+        this.memberStatus = memberStatus;
         this.address = address;
     }
 
     public void deactivate() {
-        if (status == Status.INACTIVE) {
-            throw new IllegalStateException("Customer is already inactive");
+        if (memberStatus == MemberStatus.INACTIVE) {
+            throw new IllegalArgumentException("Customer already inactive");
+        } else if (memberStatus == MemberStatus.SUSPENDED) {
+            throw new IllegalArgumentException("Customer already suspended");
         }
-        this.status = Status.INACTIVE;
+        this.memberStatus = MemberStatus.INACTIVE;
+    }
+
+    public void suspend() {
+        if (memberStatus == MemberStatus.SUSPENDED) {
+            throw new IllegalArgumentException("Customer already suspended");
+        }
+        this.memberStatus = MemberStatus.SUSPENDED;
+    }
+
+    public void activate() {
+        if (memberStatus == MemberStatus.ACTIVE) {
+            throw new IllegalArgumentException("Customer already active");
+        }
+        this.memberStatus = MemberStatus.ACTIVE;
     }
 }

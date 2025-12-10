@@ -7,7 +7,6 @@ import com.tontine.customer.models.utils.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class CustomerFixtures {
@@ -47,7 +46,7 @@ public class CustomerFixtures {
                 .email("john.doe@example.com")
                 .phone("+1234567890")
                 .maritalStatus(MaritalStatus.SINGLE)
-                .status(Status.ACTIVE)
+                .memberStatus(MemberStatus.ACTIVE)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Anytown")
@@ -71,7 +70,7 @@ public class CustomerFixtures {
                 .email("john.doe@example.com")
                 .phone("+1234567890")
                 .maritalStatus(ApiMaritalStatus.SINGLE)
-                .status(ApiStatus.ACTIVE)
+                .memberStatus(ApiMemberStatus.ACTIVE)
                 .address(new ApiAddress()
                         .street("123 Main St")
                         .city("Anytown")
@@ -114,7 +113,7 @@ public class CustomerFixtures {
                 .email("sophia.Smith@example.com")
                 .phone("+1987654321")
                 .maritalStatus(MaritalStatus.SINGLE)
-                .status(Status.ACTIVE)
+                .memberStatus(MemberStatus.ACTIVE)
                 .address(Address.builder()
                         .street("456 Elm St")
                         .city("Othertown")
@@ -138,14 +137,43 @@ public class CustomerFixtures {
                 .email("sophia.Smith@example.com")
                 .phone("+1987654321")
                 .maritalStatus(ApiMaritalStatus.SINGLE)
-                .status(ApiStatus.ACTIVE)
+                .memberStatus(ApiMemberStatus.ACTIVE)
                 .address(new ApiAddress()
                         .street("456 Elm St")
                         .city("Othertown")
                         .state("Otherstate")
                         .zipCode("67890")
-                        .country("USA")
-                );
+                        .country("USA"));
+    }
+
+    public static ApiProfile profile() {
+        return new ApiProfile()
+                .firstname("Sophia")
+                .lastname("Jackson")
+                .email("sophiaS123@email.com")
+                .phone("+1987654321")
+                .maritalStatus(ApiMaritalStatus.MARRIED)
+                .memberStatus(ApiMemberStatus.ACTIVE)
+                .address(apiAddress2());
+    }
+
+    public static ApiAddress apiAddress2() {
+        return new ApiAddress()
+                .street("847 Other Street")
+                .city("Othertown")
+                .state("Some State")
+                .zipCode("84939")
+                .country("USA");
+    }
+
+    public static Address address2() {
+        return Address.builder()
+                .street("847 Other Street")
+                .city("Othertown")
+                .state("Some State")
+                .zipCode("84939")
+                .country("USA")
+                .build();
     }
 
     public static List<Customer> customerList = List.of(customer1(), customer2());
@@ -163,7 +191,7 @@ public class CustomerFixtures {
                 .email("john.doe@example") // Invalid email
                 // Birthdate is missing
                 .phone("+1234567890")
-                .status(Status.ACTIVE)
+                .memberStatus(MemberStatus.ACTIVE)
                 .maritalStatus(MaritalStatus.SINGLE)
                 .address(Address.builder()
                         .street("123 Main St")
