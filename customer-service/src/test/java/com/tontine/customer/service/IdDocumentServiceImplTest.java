@@ -19,7 +19,7 @@ class IdDocumentServiceImplTest {
     }
 
     @Test
-    void createDocument() {
+    void addDocument() {
     }
 
     @Test

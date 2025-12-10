@@ -10,7 +10,7 @@ public interface IdDocumentService {
     List<ApiIdDocumentResponse> getAllDocuments();
     List<ApiIdDocumentResponse> getAllByCustomerId(UUID customerId);
     ApiIdDocumentResponse getById(UUID customerId, UUID idDocumentId);
-    ApiIdDocumentResponse createDocument(UUID customerId, ApiIdDocumentRequest apiIdDocumentRequest);
+    ApiIdDocumentResponse addDocument(UUID customerId, ApiIdDocumentRequest apiIdDocumentRequest);
     ApiIdDocumentResponse updateDocument(UUID customerId, UUID idDocumentId, ApiIdDocumentRequest apiIdDocumentRequest);
     void deleteDocument(UUID customerId, UUID idDocumentId);
 }

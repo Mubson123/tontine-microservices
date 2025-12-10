@@ -1,4 +1,4 @@
-package com.tontine.customer.service;
+package com.tontine.customer.service.impl;
 
 import com.tontine.customer.exception.CustomerNotFoundException;
 import com.tontine.customer.mapper.CustomerMapper;
@@ -6,6 +6,7 @@ import com.tontine.customer.model.ApiCustomerRequest;
 import com.tontine.customer.model.ApiCustomerResponse;
 import com.tontine.customer.models.Customer;
 import com.tontine.customer.repository.CustomerRepository;
+import com.tontine.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

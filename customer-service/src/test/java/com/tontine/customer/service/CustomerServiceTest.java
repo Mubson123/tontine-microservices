@@ -7,6 +7,7 @@ import com.tontine.customer.model.ApiCustomerRequest;
 import com.tontine.customer.model.ApiCustomerResponse;
 import com.tontine.customer.models.Customer;
 import com.tontine.customer.repository.CustomerRepository;
+import com.tontine.customer.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
