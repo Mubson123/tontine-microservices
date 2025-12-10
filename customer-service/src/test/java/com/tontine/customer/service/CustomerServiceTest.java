@@ -3,9 +3,10 @@ package com.tontine.customer.service;
 import com.tontine.customer.exception.CustomerNotFoundException;
 import com.tontine.customer.fixtures.CustomerFixtures;
 import com.tontine.customer.mapper.CustomerMapper;
-import com.tontine.customer.model.ApiCustomerRequest;
-import com.tontine.customer.model.ApiCustomerResponse;
+import com.tontine.customer.model.*;
 import com.tontine.customer.models.Customer;
+import com.tontine.customer.models.utils.Address;
+import com.tontine.customer.models.utils.MemberStatus;
 import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -45,9 +46,8 @@ class CustomerServiceTest {
         assertNotNull(actual);
         assertEquals(2, actual.size());
         assertEquals(actual, expected);
-
-        verify(customerRepository, times(1)).findAll();
-        verify(customerMapper, times(1)).toApiCustomerResponses(customers);
+        verify(customerRepository).findAll();
+        verify(customerMapper).toApiCustomerResponses(customers);
     }
 
     @Test
@@ -62,8 +62,8 @@ class CustomerServiceTest {
 
         assertNotNull(actual);
         assertEquals(actual, expected);
-        verify(customerRepository, times(1)).findById(customerId);
-        verify(customerMapper, times(1)).toApiCustomerResponse(customer);
+        verify(customerRepository).findById(customerId);
+        verify(customerMapper).toApiCustomerResponse(customer);
     }
 
     @Test
@@ -78,7 +78,7 @@ class CustomerServiceTest {
         String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
-        verify(customerRepository, times(1)).findById(customerId);
+        verify(customerRepository).findById(customerId);
         verify(customerMapper, times(0)).toApiCustomerResponse(any());
     }
 
@@ -93,12 +93,12 @@ class CustomerServiceTest {
         when(customerMapper.toApiCustomerResponse(customer)).thenReturn(expected);
 
         ApiCustomerResponse actual = customerService.createCustomer(customerRequest);
+
         assertNotNull(actual);
         assertEquals(actual, expected);
-
-        verify(customerMapper, times(1)).toCustomer(customerRequest);
-        verify(customerRepository, times(1)).save(customer);
-        verify(customerMapper, times(1)).toApiCustomerResponse(customer);
+        verify(customerMapper).toCustomer(customerRequest);
+        verify(customerRepository).save(customer);
+        verify(customerMapper).toApiCustomerResponse(customer);
     }
 
     @Test
@@ -110,20 +110,174 @@ class CustomerServiceTest {
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
         doNothing().when(customerMapper).updateCustomerFromRequest(customerRequest, customer);
+        when(customerRepository.save(customer)).thenReturn(customer);
         when(customerMapper.toApiCustomerResponse(customer)).thenReturn(expected);
 
         ApiCustomerResponse actual = customerService.updateCustomer(customerId, customerRequest);
 
         assertNotNull(actual);
         assertEquals(actual, expected);
-
-        verify(customerRepository, times(1)).findById(customerId);
-        verify(customerMapper, times(1)).updateCustomerFromRequest(customerRequest, customer);
-        verify(customerMapper, times(1)).toApiCustomerResponse(customer);
+        verify(customerRepository).findById(customerId);
+        verify(customerMapper).updateCustomerFromRequest(customerRequest, customer);
+        verify(customerMapper).toApiCustomerResponse(customer);
     }
 
     @Test
-    void deleteCustomer() {
+    void shouldUpdateProfileSuccessfully() {
+        Customer customer = CustomerFixtures.customer2();
+        UUID customerId = customer.getId();
+        ApiProfile profile = CustomerFixtures.profile();
+        Address address = CustomerFixtures.address2();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(customerMapper.toAddress(profile.getAddress())).thenReturn(address);
+        when(customerRepository.save(customer)).thenReturn(customer);
+
+        customerService.updateProfile(customerId, profile);
+    
+        verify(customerRepository).save(customer);
+        assertEquals(customer.getLastname(), profile.getLastname());
+        assertEquals(customer.getEmail(), profile.getEmail());
+        assertEquals(customer.getMemberStatus().name(), profile.getMemberStatus().name());
+    }
+
+    @Test
+    void shouldUpdateSuspendedProfileException() {
+        Customer customer = CustomerFixtures.customer2();
+        customer.setMemberStatus(MemberStatus.SUSPENDED);
+        UUID customerId = customer.getId();
+        ApiProfile profile = CustomerFixtures.profile();
+        profile.setMemberStatus(ApiMemberStatus.SUSPENDED);
+        Address address = CustomerFixtures.address2();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(customerMapper.toAddress(profile.getAddress())).thenReturn(address);
+
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> customerService.updateProfile(customerId, profile));
+
+        String expectedMessage = "Cannot update profile of a suspended customer";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository, times(0)).save(customer);
+    }
+
+    @Test
+    void shouldSuspendCustomerSuccessfully() {
+        Customer customer = CustomerFixtures.customer1();
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(customerRepository.save(customer)).thenReturn(customer);
+
+        customerService.suspendCustomer(customerId);
+
+        assertEquals(customer.getMemberStatus().name(), MemberStatus.SUSPENDED.name());
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository).save(customer);
+    }
+
+    @Test
+    void shouldSuspendAlreadySuspendedCustomerException() {
+        Customer customer = CustomerFixtures.customer1();
+        customer.setMemberStatus(MemberStatus.SUSPENDED);
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> customerService.suspendCustomer(customerId));
+
+        String expectedMessage = "Customer already suspended";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository, times(0)).save(customer);
+    }
+
+    @Test
+    void shouldActivateNonActiveCustomerSuccessfully() {
+        Customer customer = CustomerFixtures.customer2();
+        customer.setMemberStatus(MemberStatus.INACTIVE);
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(customerRepository.save(customer)).thenReturn(customer);
+
+        customerService.activateCustomer(customerId);
+
+        assertEquals(customer.getMemberStatus().name(), MemberStatus.ACTIVE.name());
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository).save(customer);
+    }
+
+    @Test
+    void shouldActivateAlreadyActiveCustomerException() {
+        Customer customer = CustomerFixtures.customer2();
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> customerService.activateCustomer(customerId));
+
+        String expectedMessage = "Customer already active";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository, times(0)).save(customer);
+    }
+
+    @Test
+    void shouldDeactivateActiveCustomerSuccessfully() {
+        Customer customer = CustomerFixtures.customer1();
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(customerRepository.save(customer)).thenReturn(customer);
+
+        customerService.deactivateCustomer(customerId);
+
+        assertEquals(customer.getMemberStatus().name(), MemberStatus.INACTIVE.name());
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository).save(customer);
+    }
+
+    @Test
+    void shouldDeactivateInactiveCustomerException() {
+        Customer customer = CustomerFixtures.customer1();
+        customer.setMemberStatus(MemberStatus.INACTIVE);
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> customerService.deactivateCustomer(customerId));
+
+        String expectedMessage = "Customer already inactive";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository, times(0)).save(customer);
+    }
+
+    @Test
+    void shouldDeactivateSuspendedCustomerException() {
+        Customer customer = CustomerFixtures.customer1();
+        customer.setMemberStatus(MemberStatus.SUSPENDED);
+        UUID customerId = customer.getId();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> customerService.deactivateCustomer(customerId));
+
+        String expectedMessage = "Customer already suspended";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository, times(0)).save(customer);
+    }
+
+    @Test
+    void shouldDeleteCustomerSuccessfully() {
         Customer customer = CustomerFixtures.customer1();
         UUID customerId = customer.getId();
 
@@ -132,7 +286,7 @@ class CustomerServiceTest {
 
         customerService.deleteCustomer(customerId);
 
-        verify(customerRepository, times(1)).findById(customerId);
-        verify(customerRepository, times(1)).delete(customer);
+        verify(customerRepository).findById(customerId);
+        verify(customerRepository).delete(customer);
     }
 }

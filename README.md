@@ -18,7 +18,7 @@ A tontine functions like an association with an elected or appointed executive c
 
 ### 🔹 Member & Contribution Tracking
 - Register weekly contributions
-- Track payment status for each member
+- Track payment memberStatus for each member
 - Handle late or missing payments
 - Automatic calculation of total collected amount
 
@@ -107,7 +107,7 @@ The project follows a modern microservice-based architecture:
 
 ## 🛠️ Tech Stack
 
-- **Java 17+**
+- **Java 21**
 - **Spring Boot / Spring Cloud**
 - **PostgreSQL or MySQL**
 - **Docker & Docker Compose**

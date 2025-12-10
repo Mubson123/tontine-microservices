@@ -319,6 +319,38 @@ components:
       bearerFormat: JWT
 
   schemas:
+    Profile:
+      type: object
+      required:
+        - firstname
+        - lastname
+        - email
+        - phone
+        - maritalStatus
+        - memberStatus
+        - address
+      properties:
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          pattern: '^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
+          example: john.doe@email.com
+        phone:
+          type: string
+          example: '+1234567890'
+        maritalStatus:
+          $ref: '#/components/schemas/MaritalStatus'
+        memberStatus:
+          $ref: '#/components/schemas/MemberStatus'
+        address:
+          $ref: '#/components/schemas/Address'
+
     CustomerRequest:
       type: object
       required:
@@ -330,6 +362,7 @@ components:
         - birthdate
         - phone
         - maritalStatus
+        - memberStatus
         - address
       properties:
         title:
@@ -356,6 +389,8 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
+        memberStatus:
+          $ref: '#/components/schemas/MemberStatus'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -373,7 +408,7 @@ components:
         - birthdate
         - phone
         - maritalStatus
-        - status
+        - memberStatus
         - address
       properties:
         id:
@@ -411,8 +446,8 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        status:
-          $ref: '#/components/schemas/Status'
+        memberStatus:
+          $ref: '#/components/schemas/MemberStatus'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -544,17 +579,17 @@ components:
           type: string
           format: uuid
           example: '123e4567-e89b-12d3-a456-426614174001'
-        joinDate:
+        joinedAt:
             type: string
             format: date
             example: '2023-01-01'
-        leftDate:
+        leftAt:
             type: string
             format: date
             nullable: true
             example: '2024-01-01'
-        role:
-          $ref: '#/components/schemas/Role'
+        memberRole:
+          $ref: '#/components/schemas/MemberRole'
         positionInRotation:
           type: integer
           example: 1
@@ -599,7 +634,7 @@ components:
         - OTHER
       example: ID_CARD
 
-    Role:
+    MemberRole:
       type: string
       enum:
         - ADMIN
@@ -618,7 +653,7 @@ components:
       description: Position of the user in the system
       example: MEMBER
 
-    Status:
+    MemberStatus:
         type: string
         enum:
             - ACTIVE

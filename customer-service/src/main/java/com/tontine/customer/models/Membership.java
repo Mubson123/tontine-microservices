@@ -1,6 +1,7 @@
 package com.tontine.customer.models;
 
-import com.tontine.customer.models.utils.Role;
+import com.tontine.customer.models.utils.MemberRole;
+import com.tontine.customer.models.utils.MemberStatus;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -34,24 +35,24 @@ public class Membership {
     @NotNull(message = "Tontine ID required")
     private UUID tontineId;
     @NotNull(message = "Join date required")
-    private LocalDate joinDate;
+    private LocalDate joinedAt;
     @Nullable
-    private LocalDate leftDate;
+    private LocalDate leftAt;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private MemberRole memberRole;
     private int positionInRotation;
-    private boolean active;
+    private MemberStatus memberStatus;
 
-    public void assignRole(Role newRole) {
-        if (!active) {
-            throw new IllegalStateException("Cannot assign role to an inactive membership.");
+    public void assignRole(MemberRole newMemberRole) {
+        if (memberStatus == MemberStatus.INACTIVE || memberStatus == MemberStatus.SUSPENDED) {
+            throw new IllegalStateException("Cannot assign role to an inactive membership");
         }
-        this.role = newRole;
+        this.memberRole = newMemberRole;
     }
 
     public void changeRotationPosition(int newPosition) {
         if (newPosition < 1) {
-            throw new IllegalArgumentException("Position in rotation must be a positive integer.");
+            throw new IllegalArgumentException("Position in rotation must be a positive integer");
         }
         this.positionInRotation = newPosition;
     }
