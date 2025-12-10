@@ -61,6 +61,7 @@ The project follows a modern microservice-based architecture:
 - **Notification Service** — reminders & updates (email/SMS)  
 - **Common Libraries** — shared DTOs, utilities & exceptions  
 
+```bash
 
                              +------------------------------+
                              |        API Gateway           |
