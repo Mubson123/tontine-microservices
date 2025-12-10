@@ -5,6 +5,7 @@ import com.tontine.customer.exception.IdDocumentAlreadyExistsException;
 import com.tontine.customer.exception.IdDocumentExpiredException;
 import com.tontine.customer.exception.IdDocumentNotFoundException;
 import com.tontine.customer.mapper.CustomerMapper;
+import com.tontine.customer.mapper.IdDocumentMapper;
 import com.tontine.customer.model.ApiIdDocumentRequest;
 import com.tontine.customer.model.ApiIdDocumentResponse;
 import com.tontine.customer.models.Customer;
@@ -27,25 +28,25 @@ public class IdDocumentServiceImpl implements IdDocumentService {
     private static final String DOCUMENT_NOT_FOUND = "Identification document for Customer %s not found";
     private final IdDocumentRepository idDocumentRepository;
     private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
+    private final IdDocumentMapper idDocumentMapper;
 
     @Override
     public List<ApiIdDocumentResponse> getAllDocuments() {
         List<IdDocument> idDocuments = idDocumentRepository.findAll();
-        return customerMapper.toApiIdDocumentResponses(idDocuments);
+        return idDocumentMapper.toApiIdDocumentResponses(idDocuments);
     }
 
     @Override
     public List<ApiIdDocumentResponse> getAllByCustomerId(UUID customerId) {
         List<IdDocument> idDocuments = idDocumentRepository.findByCustomerId(customerId);
-        return customerMapper.toApiIdDocumentResponses(idDocuments);
+        return idDocumentMapper.toApiIdDocumentResponses(idDocuments);
     }
 
     @Override
     public ApiIdDocumentResponse getById(UUID customerId, UUID idDocumentId) {
         IdDocument idDocument = idDocumentRepository.findByIdAndCustomerId(idDocumentId, customerId)
                 .orElseThrow(() -> new IdDocumentNotFoundException(DOCUMENT_NOT_FOUND.formatted(customerId)));
-        return customerMapper.toApiIdDocumentResponse(idDocument);
+        return idDocumentMapper.toApiIdDocumentResponse(idDocument);
     }
 
     @Override
@@ -60,10 +61,10 @@ public class IdDocumentServiceImpl implements IdDocumentService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(
                         "Customer with ID %s not found".formatted(customerId)));
-        IdDocument idDocument = customerMapper.toIdDocument(apiIdDocumentRequest);
+        IdDocument idDocument = idDocumentMapper.toIdDocument(apiIdDocumentRequest);
         idDocument.setCustomer(customer);
         idDocument = idDocumentRepository.save(idDocument);
-        return customerMapper.toApiIdDocumentResponse(idDocument);
+        return idDocumentMapper.toApiIdDocumentResponse(idDocument);
     }
 
     @Override
@@ -76,9 +77,9 @@ public class IdDocumentServiceImpl implements IdDocumentService {
             throw new IdDocumentExpiredException(
                     "Cannot update expired identification document for Customer %s".formatted(customerId));
         }
-        customerMapper.updateDocumentFromRequest(apiIdDocumentRequest, idDocument);
+        idDocumentMapper.updateDocumentFromRequest(apiIdDocumentRequest, idDocument);
         idDocument = idDocumentRepository.save(idDocument);
-        return customerMapper.toApiIdDocumentResponse(idDocument);
+        return idDocumentMapper.toApiIdDocumentResponse(idDocument);
     }
 
     @Override
