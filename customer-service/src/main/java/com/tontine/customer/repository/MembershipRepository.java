@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface MembershipRepository extends JpaRepository<Membership, UUID> {
-    Optional<Membership> findByIdAndByTontineId(UUID membershipId, UUID tontineId);
+    Optional<Membership> findByIdAndTontineId(UUID membershipId, UUID tontineId);
     List<Membership> findByTontineId(UUID tontineId);
 }

@@ -45,7 +45,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public ApiMembershipResponse getMembershipById(UUID tontineId, UUID membershipId) {
         Membership membership = membershipRepository
-                .findByIdAndByTontineId(membershipId, tontineId)
+                .findByIdAndTontineId(membershipId, tontineId)
                 .orElseThrow(() -> new MembershipNotFoundException(
                         MEMBERSHIP_NOT_FOUND.formatted(membershipId)));
         return membershipMapper.toApiMembership(membership);
@@ -71,7 +71,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Transactional
     public ApiMembershipResponse updateMembership(UUID tontineId, UUID membershipId, ApiMembershipRequest membershipRequest) {
         Membership membership = membershipRepository
-                .findByIdAndByTontineId(membershipId, tontineId)
+                .findByIdAndTontineId(membershipId, tontineId)
                 .orElseThrow(() -> new MembershipNotFoundException(
                         MEMBERSHIP_NOT_FOUND.formatted(membershipId)));
         membership.assignRole(MemberRole.valueOf(membershipRequest.getMemberRole().name()));
@@ -85,7 +85,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Transactional
     public void deleteMembership(UUID tontineId, UUID membershipId) {
         Membership membership = membershipRepository
-                .findByIdAndByTontineId(membershipId, tontineId)
+                .findByIdAndTontineId(membershipId, tontineId)
                 .orElseThrow(() -> new MembershipNotFoundException(
                         MEMBERSHIP_NOT_FOUND.formatted(membershipId)));
         membershipRepository.delete(membership);
