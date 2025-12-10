@@ -102,7 +102,7 @@ The project follows a modern microservice-based architecture:
                            |      Event Bus         |
                            |  (Kafka / RabbitMQ)    |
                            +------------------------+
-
+´´´
 ---
 
 ## 🛠️ Tech Stack
