@@ -102,7 +102,7 @@ The project follows a modern microservice-based architecture:
                            |      Event Bus         |
                            |  (Kafka / RabbitMQ)    |
                            +------------------------+
-´´´
+```
 ---
 
 ## 🛠️ Tech Stack
@@ -124,3 +124,4 @@ The project follows a modern microservice-based architecture:
 ```bash
 git https://github.com/Mubson123/tontine-microservices.git
 cd tontine-app
+```
