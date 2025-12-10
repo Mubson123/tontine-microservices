@@ -330,7 +330,6 @@ components:
         - birthdate
         - phone
         - maritalStatus
-        - positions
         - address
       properties:
         title:
@@ -357,10 +356,6 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        positions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Position'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -378,7 +373,7 @@ components:
         - birthdate
         - phone
         - maritalStatus
-        - positions
+        - status
         - address
       properties:
         id:
@@ -416,10 +411,8 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        positions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Position'
+        status:
+          $ref: '#/components/schemas/Status'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -569,7 +562,6 @@ components:
       type: string
       enum:
         - ADMIN
-        - USER
         - GUEST
         - PRESIDENT
         - VICE_PRESIDENT
@@ -580,12 +572,18 @@ components:
         - SENSOR
         - VICE_SENSOR
         - MEMBER
-        - NOT_MEMBER
         - ASSOCIATE
-        - VOLUNTEER
         - FOUNDER
       description: Position of the user in the system
       example: MEMBER
+
+    Status:
+        type: string
+        enum:
+            - ACTIVE
+            - INACTIVE
+            - SUSPENDED
+        example: ACTIVE
 
     Error:
       type: object

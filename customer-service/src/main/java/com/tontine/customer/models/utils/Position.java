@@ -2,7 +2,6 @@ package com.tontine.customer.models.utils;
 
 public enum Position {
     ADMIN,
-    USER,
     GUEST,
     PRESIDENT,
     VICE_PRESIDENT,
@@ -13,8 +12,6 @@ public enum Position {
     SENSOR,
     VICE_SENSOR,
     MEMBER,
-    NOT_MEMBER,
     ASSOCIATE,
-    VOLUNTEER,
     FOUNDER
 }

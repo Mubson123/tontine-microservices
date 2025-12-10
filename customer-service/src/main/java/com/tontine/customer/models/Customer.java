@@ -14,8 +14,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -51,14 +49,39 @@ public class Customer {
     @NotNull(message = "maritalStatus required")
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
-    @Valid
-    @NotNull(message = "positions required")
-    @ElementCollection
-    @Builder.Default
+    @NotNull(message = "status required")
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "customer_positions", joinColumns = @JoinColumn(name = "customer_id"))
-    private Set<Position> positions = new LinkedHashSet<>();
+    private Status status;
+    @Valid
     @NotNull(message = "address required")
     @Embedded
     private Address address;
+
+    public void updateProfile(
+            String firstname,
+            String lastname,
+            String email,
+            String phone,
+            MaritalStatus maritalStatus,
+            Status status,
+            Address address
+    ) {
+        if (status == Status.SUSPENDED) {
+            throw new IllegalArgumentException("Cannot update profile of a suspended customer");
+        }
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phone = phone;
+        this.email = email;
+        this.maritalStatus = maritalStatus;
+        this.status = status;
+        this.address = address;
+    }
+
+    public void deactivate() {
+        if (status == Status.INACTIVE) {
+            throw new IllegalStateException("Customer is already inactive");
+        }
+        this.status = Status.INACTIVE;
+    }
 }
