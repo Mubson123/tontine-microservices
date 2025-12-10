@@ -61,6 +61,47 @@ The project follows a modern microservice-based architecture:
 - **Notification Service** — reminders & updates (email/SMS)  
 - **Common Libraries** — shared DTOs, utilities & exceptions  
 
+
+                             +------------------------------+
+                             |        API Gateway           |
+                             | (Routing, Auth, Rate Limit)  |
+                             +--------------+---------------+
+                                            |
+                                            v
+                 -----------------------------------------------------------
+                 |                 Kubernetes Cluster                      |
+                 -----------------------------------------------------------
+                   |                   |                |                |
+                   v                   v                v                v
+
+     +---------------------+  +----------------+  +----------------+  +----------------+
+     |  Customer Service   |  |  Tontine       |  |   Session      |  | Contribution   |
+     |---------------------|  |   Service      |  |   Service      |  |   Service      |
+     | + Manage customers  |  |----------------|  |----------------|  |----------------|
+     | + Roles & profiles  |  | + Create       |  | + Agenda mgmt  |  | + Register     |
+     | + Authentication    |  |   tontines     |  | + Attendance   |  |   payments     |
+     |   (JWT/Keycloak)    |  | + Members      |  | + Summary      |  | + Rotation     |
+     +----------+----------+  | + Bureau       |  |   history      |  |   logic        |
+                |             +--------+-------+  +--------+-------+  +--------+-------+
+                |                      |                   |                   |
+                |                      v                   |                   v
+                |            +----------------+            |         +----------------+
+                |            | Beneficiary    |            |         | Notification   |
+                |            |   Service      |            |         |   Service      |
+                |            |----------------|            |         |----------------|
+                |            | + Select next  |            |         | + Emails       |
+                |            |   beneficiary  |            |         | + SMS          |
+                |            +--------+-------+            |         +--------+-------+
+                |                     |                    |                  |
+                |                     |                    |                  |
+                |---------------------|--------------------|------------------|
+                                      |
+                                      v
+                           +------------------------+
+                           |      Event Bus         |
+                           |  (Kafka / RabbitMQ)    |
+                           +------------------------+
+
 ---
 
 ## 🛠️ Tech Stack
