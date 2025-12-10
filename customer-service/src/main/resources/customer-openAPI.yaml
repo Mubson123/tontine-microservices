@@ -521,6 +521,47 @@ components:
         documentType:
           $ref: '#/components/schemas/DocumentType'
 
+    Membership:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2023-01-02T12:00:00Z'
+        customerId:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        tontineId:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174001'
+        joinDate:
+            type: string
+            format: date
+            example: '2023-01-01'
+        leftDate:
+            type: string
+            format: date
+            nullable: true
+            example: '2024-01-01'
+        role:
+          $ref: '#/components/schemas/Role'
+        positionInRotation:
+          type: integer
+          example: 1
+        active:
+          type: boolean
+          example: true
+
     MaritalStatus:
       type: string
       enum:
@@ -558,7 +599,7 @@ components:
         - OTHER
       example: ID_CARD
 
-    Position:
+    Role:
       type: string
       enum:
         - ADMIN

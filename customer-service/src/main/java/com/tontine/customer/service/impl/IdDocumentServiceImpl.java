@@ -1,4 +1,4 @@
-package com.tontine.customer.service;
+package com.tontine.customer.service.impl;
 
 import com.tontine.customer.exception.CustomerNotFoundException;
 import com.tontine.customer.exception.IdDocumentAlreadyExistsException;
@@ -11,6 +11,7 @@ import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.IdDocument;
 import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.repository.IdDocumentRepository;
+import com.tontine.customer.service.IdDocumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,7 @@ public class IdDocumentServiceImpl implements IdDocumentService {
 
     @Override
     @Transactional
-    public ApiIdDocumentResponse createDocument(UUID customerId, ApiIdDocumentRequest apiIdDocumentRequest) {
+    public ApiIdDocumentResponse addDocument(UUID customerId, ApiIdDocumentRequest apiIdDocumentRequest) {
         boolean exists = idDocumentRepository.existsByDocumentType(apiIdDocumentRequest.getDocumentType().name());
         if (exists) {
             throw new IdDocumentAlreadyExistsException(
