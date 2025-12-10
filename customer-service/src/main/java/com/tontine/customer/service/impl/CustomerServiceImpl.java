@@ -14,13 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
-    public static final String CUSTOMER_NOT_FOUND = "Customer with ID %s not found";
+    private static final String CUSTOMER_NOT_FOUND = "Customer with ID %s not found";
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
@@ -42,6 +43,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public ApiCustomerResponse createCustomer(ApiCustomerRequest apiCustomerRequest) {
         Customer customer = customerMapper.toCustomer(apiCustomerRequest);
+        customer.setCreatedAt(LocalDateTime.now());
+        customer.setUpdatedAt(LocalDateTime.now());
         customer = customerRepository.save(customer);
         return customerMapper.toApiCustomerResponse(customer);
     }
@@ -52,7 +55,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
             customerMapper.updateCustomerFromRequest(apiCustomerRequest, customer);
-        customer = customerRepository.save(customer);
+            customer.setUpdatedAt(LocalDateTime.now());
+            customer = customerRepository.save(customer);
         return customerMapper.toApiCustomerResponse(customer);
     }
 
@@ -68,8 +72,8 @@ public class CustomerServiceImpl implements CustomerService {
                 profile.getPhone(),
                 MaritalStatus.valueOf(profile.getMaritalStatus().name()),
                 MemberStatus.valueOf(profile.getMemberStatus().name()),
-                customerMapper.toAddress(profile.getAddress())
-        );
+                customerMapper.toAddress(profile.getAddress()));
+        customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
     }
 
@@ -79,6 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.suspend();
+        customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
     }
 
@@ -88,6 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.activate();
+        customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
     }
 
@@ -97,6 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.deactivate();
+        customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
     }
 
