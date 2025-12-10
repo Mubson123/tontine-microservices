@@ -14,6 +14,8 @@ tags:
     description: Customer Service REST Endpoints
   - name: Id Document Controller
     description: Id Document Service REST Endpoints
+  - name: Membership Controller
+    description: Membership Service REST Endpoints
 
 paths:
   /customers:
@@ -556,8 +558,30 @@ components:
         documentType:
           $ref: '#/components/schemas/DocumentType'
 
-    Membership:
+    MembershipRequest:
       type: object
+      required:
+        - memberRole
+        - positionInRotation
+      properties:
+        memberRole:
+          $ref: '#/components/schemas/MemberRole'
+        positionInRotation:
+          type: integer
+          example: 1
+
+    MembershipResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - customerId
+        - tontineId
+        - joinedAt
+        - memberRole
+        - positionInRotation
+        - memberStatus
       properties:
         id:
           type: string
@@ -593,9 +617,8 @@ components:
         positionInRotation:
           type: integer
           example: 1
-        active:
-          type: boolean
-          example: true
+        memberStatus:
+          $ref: '#/components/schemas/MemberStatus'
 
     MaritalStatus:
       type: string

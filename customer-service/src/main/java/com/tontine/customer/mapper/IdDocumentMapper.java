@@ -12,10 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface IdDocumentMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "customer", ignore = true)
     IdDocument toIdDocument(ApiIdDocumentRequest idCardRequest);
 
     @Mapping(target = "customerId", source = "customer.id")
@@ -23,9 +19,5 @@ public interface IdDocumentMapper {
 
     List<ApiIdDocumentResponse> toApiIdDocumentResponses(List<IdDocument> idDocuments);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "customer", ignore = true)
     void updateDocumentFromRequest(ApiIdDocumentRequest apiIdDocumentRequest, @MappingTarget IdDocument idDocument);
 }

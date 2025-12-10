@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,6 +64,8 @@ public class IdDocumentServiceImpl implements IdDocumentService {
                         "Customer with ID %s not found".formatted(customerId)));
         IdDocument idDocument = idDocumentMapper.toIdDocument(apiIdDocumentRequest);
         idDocument.setCustomer(customer);
+        idDocument.setCreatedAt(LocalDateTime.now());
+        idDocument.setUpdatedAt(LocalDateTime.now());
         idDocument = idDocumentRepository.save(idDocument);
         return idDocumentMapper.toApiIdDocumentResponse(idDocument);
     }
@@ -78,6 +81,7 @@ public class IdDocumentServiceImpl implements IdDocumentService {
                     "Cannot update expired identification document for Customer %s".formatted(customerId));
         }
         idDocumentMapper.updateDocumentFromRequest(apiIdDocumentRequest, idDocument);
+        idDocument.setUpdatedAt(LocalDateTime.now());
         idDocument = idDocumentRepository.save(idDocument);
         return idDocumentMapper.toApiIdDocumentResponse(idDocument);
     }
