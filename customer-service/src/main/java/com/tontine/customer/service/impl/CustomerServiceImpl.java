@@ -2,12 +2,10 @@ package com.tontine.customer.service.impl;
 
 import com.tontine.customer.exception.CustomerNotFoundException;
 import com.tontine.customer.mapper.CustomerMapper;
-import com.tontine.customer.model.ApiCustomerRequest;
-import com.tontine.customer.model.ApiCustomerResponse;
-import com.tontine.customer.model.ApiProfile;
+import com.tontine.customer.model.*;
 import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.utils.MaritalStatus;
-import com.tontine.customer.models.utils.MemberStatus;
+import com.tontine.customer.models.utils.Status;
 import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void updateProfile(UUID customerId, ApiProfile profile) {
+    public ApiCustomerResponse updateProfile(UUID customerId, ApiProfile profile) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.updateProfile(
@@ -71,40 +69,47 @@ public class CustomerServiceImpl implements CustomerService {
                 profile.getEmail(),
                 profile.getPhone(),
                 MaritalStatus.valueOf(profile.getMaritalStatus().name()),
-                MemberStatus.valueOf(profile.getMemberStatus().name()),
+                Status.valueOf(profile.getStatus().name()),
                 customerMapper.toAddress(profile.getAddress()));
         customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
+        return customerMapper.toApiCustomerResponse(customer);
     }
 
     @Override
     @Transactional
-    public void suspendCustomer(UUID customerId) {
+    public ApiStatusResponse suspendCustomer(UUID customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.suspend();
         customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
+        return new ApiStatusResponse().id(customerId)
+                .status(ApiStatus.valueOf(customer.getStatus().name()));
     }
 
     @Override
     @Transactional
-    public void activateCustomer(UUID customerId) {
+    public ApiStatusResponse activateCustomer(UUID customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.activate();
         customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
+        return new ApiStatusResponse().id(customerId)
+                .status(ApiStatus.valueOf(customer.getStatus().name()));
     }
 
     @Override
     @Transactional
-    public void deactivateCustomer(UUID customerId) {
+    public ApiStatusResponse deactivateCustomer(UUID customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
         customer.deactivate();
         customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
+        return new ApiStatusResponse().id(customerId)
+                .status(ApiStatus.valueOf(customer.getStatus().name()));
     }
 
     @Override

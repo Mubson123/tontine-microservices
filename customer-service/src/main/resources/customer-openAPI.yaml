@@ -12,8 +12,8 @@ security:
 tags:
   - name: Customer Controller
     description: Customer Service REST Endpoints
-  - name: Id Document Controller
-    description: Id Document Service REST Endpoints
+  - name: Admin Customer Controller
+    description: Admin Service REST Endpoints
   - name: Membership Controller
     description: Membership Service REST Endpoints
 
@@ -147,139 +147,28 @@ paths:
         default:
           $ref: '#/components/responses/DefaultError'
 
-
-  /customers/id-documents:
-    get:
-      tags:
-        - Id Document Controller
-      summary: Returns a list of all ID Documents
-      description: Returns a list of all ID Documents
-      operationId: getAllIdDocuments
-      responses:
-        '200':
-          description: Successfully retrieved ID Documents
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdDocumentResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-        default:
-          $ref: '#/components/responses/DefaultError'
-
-
-  /customers/{customerId}/id-documents:
-    get:
-      tags:
-        - Id Document Controller
-      summary: Get ID Documents for a customer
-      description: Get ID Documents for a customer
-      operationId: getIdDocumentsByCustomerId
-      parameters:
-        - $ref: '#/components/parameters/customerId'
-      responses:
-        '200':
-          description: Successfully retrieved ID Documents
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdDocumentResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-        default:
-          $ref: '#/components/responses/DefaultError'
-
-    post:
-      tags:
-        - Id Document Controller
-      summary: Create an ID Document for a customer
-      description: Create an ID Document for a customer
-      operationId: createIdDocument
-      parameters:
-        - $ref: '#/components/parameters/customerId'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/IdDocumentRequest'
-        required: true
-      responses:
-        '201':
-          description: ID Document successfully created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdDocumentResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-        default:
-          $ref: '#/components/responses/DefaultError'
-
-
-  /customers/{customerId}/id-documents/{idDocumentId}:
-    get:
-      tags:
-        - Id Document Controller
-      summary: Get an ID Document by ID for a customer
-      description: Get an ID Document by ID for a customer
-      operationId: getIdDocumentById
-      parameters:
-        - $ref: '#/components/parameters/customerId'
-        - $ref: '#/components/parameters/idDocumentId'
-      responses:
-        '200':
-          description: Successfully retrieved ID Document
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdDocumentResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-        default:
-          $ref: '#/components/responses/DefaultError'
-
+  /customers/{customerId}/profile:
     put:
       tags:
-        - Id Document Controller
-      summary: Update an ID Document for a customer
-      description: Update an ID Document for a customer
-      operationId: updateIdDocument
+        - Customer Controller
+      summary: Update an existing customer profile
+      description: Update an existing customer profile
+      operationId: updateCustomerProfile
       parameters:
         - $ref: '#/components/parameters/customerId'
-        - $ref: '#/components/parameters/idDocumentId'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdDocumentRequest'
+              $ref: '#/components/schemas/Profile'
         required: true
       responses:
         '202':
-          description: ID Document successfully updated
+          description: Customer profile successfully updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdDocumentResponse'
+                $ref: '#/components/schemas/CustomerResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -291,18 +180,81 @@ paths:
         default:
           $ref: '#/components/responses/DefaultError'
 
-    delete:
+
+  /admin/customers/{customerId}/suspend:
+    put:
       tags:
-        - Id Document Controller
-      summary: Delete an ID Document by ID for a customer
-      description: Delete an ID Document by ID for a customer
-      operationId: deleteIdDocument
+        - Admin Customer Controller
+      summary: Suspend an existing customer account
+      description: Suspend an existing customer account
+      operationId: suspendCustomer
       parameters:
         - $ref: '#/components/parameters/customerId'
-        - $ref: '#/components/parameters/idDocumentId'
       responses:
-        '204':
-          description: ID Document successfully deleted
+        '202':
+          description: Customer successfully suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+
+  /admin/customers/{customerId}/activate:
+    put:
+      tags:
+        - Admin Customer Controller
+      summary: Activate an inactive customer account
+      description: Activate an inactive customer account
+      operationId: activateCustomer
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        '202':
+          description: Customer successfully activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
+
+  /admin/customers/{customerId}/deactivate:
+    put:
+      tags:
+        - Admin Customer Controller
+      summary: Deactivate an active customer account
+      description: Deactivate an active customer account
+      operationId: deactivateCustomer
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        '202':
+          description: Customer successfully deactivated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -329,7 +281,7 @@ components:
         - email
         - phone
         - maritalStatus
-        - memberStatus
+        - status
         - address
       properties:
         firstname:
@@ -348,8 +300,8 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        memberStatus:
-          $ref: '#/components/schemas/MemberStatus'
+        status:
+          $ref: '#/components/schemas/Status'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -364,7 +316,7 @@ components:
         - birthdate
         - phone
         - maritalStatus
-        - memberStatus
+        - status
         - address
       properties:
         title:
@@ -391,8 +343,8 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        memberStatus:
-          $ref: '#/components/schemas/MemberStatus'
+        status:
+          $ref: '#/components/schemas/Status'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -410,7 +362,7 @@ components:
         - birthdate
         - phone
         - maritalStatus
-        - memberStatus
+        - status
         - address
       properties:
         id:
@@ -448,8 +400,8 @@ components:
           example: '+1234567890'
         maritalStatus:
           $ref: '#/components/schemas/MaritalStatus'
-        memberStatus:
-          $ref: '#/components/schemas/MemberStatus'
+        status:
+          $ref: '#/components/schemas/Status'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -478,86 +430,6 @@ components:
           type: string
           example: 'USA'
 
-    IdDocumentRequest:
-      type: object
-      required:
-        - nationality
-        - documentNumber
-        - issueDate
-        - expiryDate
-        - issuedBy
-        - documentType
-      properties:
-        nationality:
-          type: string
-          example: 'German'
-        documentNumber:
-          type: string
-          example: '1234567890123456'
-        issueDate:
-          type: string
-          format: date
-          example: '2020-01-01'
-        expiryDate:
-          type: string
-          format: date
-          example: '2030-01-01'
-        issuedBy:
-          type: string
-          example: 'Government of Germany'
-        documentType:
-          $ref: '#/components/schemas/DocumentType'
-
-    IdDocumentResponse:
-      type: object
-      required:
-        - id
-        - createdAt
-        - updatedAt
-        - customerId
-        - nationality
-        - documentNumber
-        - issueDate
-        - expiryDate
-        - issuedBy
-        - documentType
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: '123e4567-e89b-12d3-a456-426614174000'
-        createdAt:
-          type: string
-          format: date-time
-          example: '2023-01-01T12:00:00Z'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2023-01-02T12:00:00Z'
-        customerId:
-          type: string
-          format: uuid
-          example: '123e4567-e89b-12d3-a456-426614174000'
-        nationality:
-          type: string
-          example: 'German'
-        documentNumber:
-          type: string
-          example: '1234567890123456'
-        issueDate:
-          type: string
-          format: date
-          example: '2020-01-01'
-        expiryDate:
-          type: string
-          format: date
-          example: '2030-01-01'
-        issuedBy:
-          type: string
-          example: 'Government of Germany'
-        documentType:
-          $ref: '#/components/schemas/DocumentType'
-
     MembershipRequest:
       type: object
       required:
@@ -581,7 +453,7 @@ components:
         - joinedAt
         - memberRole
         - positionInRotation
-        - memberStatus
+        - status
       properties:
         id:
           type: string
@@ -617,8 +489,18 @@ components:
         positionInRotation:
           type: integer
           example: 1
-        memberStatus:
-          $ref: '#/components/schemas/MemberStatus'
+        status:
+          $ref: '#/components/schemas/Status'
+
+    StatusResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        status:
+          $ref: '#/components/schemas/Status'
 
     MaritalStatus:
       type: string
@@ -647,16 +529,6 @@ components:
         - OTHER
       example: MALE
 
-    DocumentType:
-      type: string
-      enum:
-        - ID_CARD
-        - PASSPORT
-        - DRIVER_LICENSE
-        - BIRTH_CERTIFICATE
-        - OTHER
-      example: ID_CARD
-
     MemberRole:
       type: string
       enum:
@@ -676,7 +548,7 @@ components:
       description: Position of the user in the system
       example: MEMBER
 
-    MemberStatus:
+    Status:
         type: string
         enum:
             - ACTIVE
@@ -727,11 +599,11 @@ components:
         format: uuid
         example: '123e4567-e89b-12d3-a456-426614174000'
 
-    idDocumentId:
-      name: idDocumentId
+    membershipId:
+      name: membershipId
       in: path
       required: true
-      description: Unique identifier for the ID Document
+      description: Unique identifier for the Membership
       schema:
         type: string
         format: uuid

@@ -18,7 +18,7 @@ A tontine functions like an association with an elected or appointed executive c
 
 ### 🔹 Member & Contribution Tracking
 - Register weekly contributions
-- Track payment memberStatus for each member
+- Track payment status for each member
 - Handle late or missing payments
 - Automatic calculation of total collected amount
 

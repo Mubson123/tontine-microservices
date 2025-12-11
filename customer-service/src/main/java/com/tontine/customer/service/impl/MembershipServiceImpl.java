@@ -8,7 +8,7 @@ import com.tontine.customer.model.ApiMembershipResponse;
 import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.Membership;
 import com.tontine.customer.models.utils.MemberRole;
-import com.tontine.customer.models.utils.MemberStatus;
+import com.tontine.customer.models.utils.Status;
 import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.repository.MembershipRepository;
 import com.tontine.customer.service.MembershipService;
@@ -63,7 +63,7 @@ public class MembershipServiceImpl implements MembershipService {
         membership.setJoinedAt(LocalDate.now());
         membership.setCreatedAt(LocalDateTime.now());
         membership.setUpdatedAt(LocalDateTime.now());
-        membership.setMemberStatus(MemberStatus.ACTIVE);
+        membership.setStatus(Status.ACTIVE);
         membership = membershipRepository.save(membership);
         return membershipMapper.toApiMembership(membership);
     }
