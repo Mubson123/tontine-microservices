@@ -28,6 +28,7 @@ public class Membership {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+    @NotNull(message = "customer required")
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
@@ -38,9 +39,12 @@ public class Membership {
     private LocalDate joinedAt;
     @Nullable
     private LocalDate leftAt;
+    @NotNull(message = "memberRole required")
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
     private int positionInRotation;
+    @NotNull(message = "member status required")
+    @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;
 
     public void assignRole(MemberRole newMemberRole) {

@@ -56,13 +56,18 @@ public class MembershipServiceImpl implements MembershipService {
     public ApiMembershipResponse createMembership(UUID tontineId, UUID customerId, ApiMembershipRequest membershipRequest) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with ID %s not found".formatted(customerId)));
+
+        if (membershipRequest.getPositionInRotation() < 1) {
+            throw new IllegalArgumentException("Position in rotation must be a positive integer");
+        }
+
         Membership membership = membershipMapper.toMembership(membershipRequest);
-        membership.setMemberStatus(MemberStatus.ACTIVE);
+        membership.setCustomer(customer);
+        membership.setTontineId(tontineId);
+        membership.setJoinedAt(LocalDate.now());
         membership.setCreatedAt(LocalDateTime.now());
         membership.setUpdatedAt(LocalDateTime.now());
-        membership.setJoinedAt(LocalDate.now());
-        membership.setTontineId(tontineId);
-        membership.setCustomer(customer);
+        membership.setMemberStatus(MemberStatus.ACTIVE);
         membership = membershipRepository.save(membership);
         return membershipMapper.toApiMembership(membership);
     }
