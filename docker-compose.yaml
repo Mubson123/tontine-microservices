@@ -1,0 +1,33 @@
+networks:
+  bubble:
+    driver: bridge
+
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: customer-db
+    restart: always
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    environment:
+      MYSQL_DATABASE: ${CUSTOMER_DATABASE}
+      MYSQL_USER: ${CUSTOMER_USERNAME}
+      MYSQL_PASSWORD: ${CUSTOMER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${CUSTOMER_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: no
+    networks:
+      - bubble
+    ports:
+      - "3308:3306"
+    volumes:
+      - customer_data:/var/lib/mysql
+
+volumes:
+  customer_data:
+
