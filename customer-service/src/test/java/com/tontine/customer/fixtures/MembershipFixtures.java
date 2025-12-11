@@ -141,7 +141,7 @@ public class MembershipFixtures {
                 .tontineId(tontineId1)
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.MEMBER)
-                .positionInRotation(1)
+                .positionInRotation(0) // 0 is not permit
                 // member status missing
                 .build();
     }

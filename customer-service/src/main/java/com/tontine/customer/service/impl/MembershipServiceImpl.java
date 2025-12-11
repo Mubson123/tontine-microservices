@@ -57,10 +57,6 @@ public class MembershipServiceImpl implements MembershipService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with ID %s not found".formatted(customerId)));
 
-        if (membershipRequest.getPositionInRotation() < 1) {
-            throw new IllegalArgumentException("Position in rotation must be a positive integer");
-        }
-
         Membership membership = membershipMapper.toMembership(membershipRequest);
         membership.setCustomer(customer);
         membership.setTontineId(tontineId);

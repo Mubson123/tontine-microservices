@@ -133,27 +133,6 @@ class MembershipServiceTest {
     }
 
     @Test
-    void shouldCreateMembershipNegativeRotationException() {
-        Customer customer = MembershipFixtures.customer2;
-        UUID customerId = customer.getId();
-        UUID tontineId1 = MembershipFixtures.tontineId1;
-        ApiMembershipRequest membershipRequest = MembershipFixtures.membershipRequest2();
-        membershipRequest.setPositionInRotation(0);
-
-        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
-
-        Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> membershipService.createMembership(tontineId1, customerId, membershipRequest));
-
-        String expectedMessage = "Position in rotation must be a positive integer";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
-        verify(customerRepository).findById(customerId);
-        verify(membershipMapper, times(0)).toMembership(membershipRequest);
-    }
-
-    @Test
     void shouldUpdateMembershipSuccessfully() {
         UUID tontineId2 = MembershipFixtures.tontineId2;
         ApiMembershipRequest membershipRequest = MembershipFixtures.membershipRequest12();

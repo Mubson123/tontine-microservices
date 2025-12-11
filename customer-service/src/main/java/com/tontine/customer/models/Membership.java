@@ -4,6 +4,7 @@ import com.tontine.customer.models.utils.MemberRole;
 import com.tontine.customer.models.utils.MemberStatus;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,6 +43,7 @@ public class Membership {
     @NotNull(message = "memberRole required")
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
+    @Min(value = 1, message = "position in rotation must be greater than 0")
     private int positionInRotation;
     @NotNull(message = "member status required")
     @Enumerated(EnumType.STRING)

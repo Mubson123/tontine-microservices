@@ -66,11 +66,12 @@ class ConstraintViolationTest {
 
         Set<ConstraintViolation<Membership>> violations = validator.validate(wrongMembership);
         assertThat(violations)
-                .hasSize(2)
+                .hasSize(3)
                 .extracting(ConstraintViolation::getMessage)
                 .containsExactlyInAnyOrder(
                         "customer required",
-                        "member status required"
+                        "member status required",
+                        "position in rotation must be greater than 0"
                 );
     }
 }
