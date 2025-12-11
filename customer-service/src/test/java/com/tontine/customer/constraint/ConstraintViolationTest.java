@@ -53,8 +53,8 @@ class ConstraintViolationTest {
                 .extracting(ConstraintViolation::getMessage)
                 .containsExactlyInAnyOrder(
                         "street " + REQUIRED,
-                        "city " + REQUIRED,
-                        "state " + REQUIRED,
+                        "city required or must have at least 2 characters",
+                        "state required or must have at least 2 characters",
                         "zipCode must be a 5-digit number",
                         "country " + REQUIRED
                 );

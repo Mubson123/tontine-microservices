@@ -6,7 +6,7 @@ import com.tontine.customer.mapper.CustomerMapper;
 import com.tontine.customer.model.*;
 import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.utils.Address;
-import com.tontine.customer.models.utils.MemberStatus;
+import com.tontine.customer.models.utils.Status;
 import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -128,25 +128,30 @@ class CustomerServiceTest {
         UUID customerId = customer.getId();
         ApiProfile profile = CustomerFixtures.profile();
         Address address = CustomerFixtures.address2();
+        ApiCustomerResponse expected = CustomerFixtures.apiCustomerResponse2();
+
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
         when(customerMapper.toAddress(profile.getAddress())).thenReturn(address);
         when(customerRepository.save(customer)).thenReturn(customer);
+        when(customerMapper.toApiCustomerResponse(customer)).thenReturn(expected);
 
-        customerService.updateProfile(customerId, profile);
-    
+        ApiCustomerResponse actual = customerService.updateProfile(customerId, profile);
+
+        assertNotNull(actual);
+        assertEquals(expected, actual);
         verify(customerRepository).save(customer);
-        assertEquals(customer.getLastname(), profile.getLastname());
-        assertEquals(customer.getEmail(), profile.getEmail());
-        assertEquals(customer.getMemberStatus().name(), profile.getMemberStatus().name());
+        verify(customerRepository).findById(customerId);
+        verify(customerMapper).toAddress(profile.getAddress());
+        verify(customerMapper).toApiCustomerResponse(customer);
     }
 
     @Test
     void shouldUpdateSuspendedProfileException() {
         Customer customer = CustomerFixtures.customer2();
-        customer.setMemberStatus(MemberStatus.SUSPENDED);
+        customer.setStatus(Status.SUSPENDED);
         UUID customerId = customer.getId();
         ApiProfile profile = CustomerFixtures.profile();
-        profile.setMemberStatus(ApiMemberStatus.SUSPENDED);
+        profile.setStatus(ApiStatus.SUSPENDED);
         Address address = CustomerFixtures.address2();
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
         when(customerMapper.toAddress(profile.getAddress())).thenReturn(address);
@@ -171,7 +176,7 @@ class CustomerServiceTest {
 
         customerService.suspendCustomer(customerId);
 
-        assertEquals(customer.getMemberStatus().name(), MemberStatus.SUSPENDED.name());
+        assertEquals(customer.getStatus().name(), Status.SUSPENDED.name());
         verify(customerRepository).findById(customerId);
         verify(customerRepository).save(customer);
     }
@@ -179,7 +184,7 @@ class CustomerServiceTest {
     @Test
     void shouldSuspendAlreadySuspendedCustomerException() {
         Customer customer = CustomerFixtures.customer1();
-        customer.setMemberStatus(MemberStatus.SUSPENDED);
+        customer.setStatus(Status.SUSPENDED);
         UUID customerId = customer.getId();
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
@@ -197,14 +202,14 @@ class CustomerServiceTest {
     @Test
     void shouldActivateNonActiveCustomerSuccessfully() {
         Customer customer = CustomerFixtures.customer2();
-        customer.setMemberStatus(MemberStatus.INACTIVE);
+        customer.setStatus(Status.INACTIVE);
         UUID customerId = customer.getId();
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
         when(customerRepository.save(customer)).thenReturn(customer);
 
         customerService.activateCustomer(customerId);
 
-        assertEquals(MemberStatus.ACTIVE.name(), customer.getMemberStatus().name());
+        assertEquals(Status.ACTIVE.name(), customer.getStatus().name());
         verify(customerRepository).findById(customerId);
         verify(customerRepository).save(customer);
     }
@@ -235,7 +240,7 @@ class CustomerServiceTest {
 
         customerService.deactivateCustomer(customerId);
 
-        assertEquals(MemberStatus.INACTIVE.name(), customer.getMemberStatus().name());
+        assertEquals(Status.INACTIVE.name(), customer.getStatus().name());
         verify(customerRepository).findById(customerId);
         verify(customerRepository).save(customer);
     }
@@ -243,7 +248,7 @@ class CustomerServiceTest {
     @Test
     void shouldDeactivateInactiveCustomerException() {
         Customer customer = CustomerFixtures.customer1();
-        customer.setMemberStatus(MemberStatus.INACTIVE);
+        customer.setStatus(Status.INACTIVE);
         UUID customerId = customer.getId();
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
@@ -261,7 +266,7 @@ class CustomerServiceTest {
     @Test
     void shouldDeactivateSuspendedCustomerException() {
         Customer customer = CustomerFixtures.customer1();
-        customer.setMemberStatus(MemberStatus.SUSPENDED);
+        customer.setStatus(Status.SUSPENDED);
         UUID customerId = customer.getId();
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 

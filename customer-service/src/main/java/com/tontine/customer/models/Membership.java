@@ -1,7 +1,7 @@
 package com.tontine.customer.models;
 
 import com.tontine.customer.models.utils.MemberRole;
-import com.tontine.customer.models.utils.MemberStatus;
+import com.tontine.customer.models.utils.Status;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -47,10 +47,10 @@ public class Membership {
     private int positionInRotation;
     @NotNull(message = "member status required")
     @Enumerated(EnumType.STRING)
-    private MemberStatus memberStatus;
+    private Status status;
 
     public void assignRole(MemberRole newMemberRole) {
-        if (memberStatus == MemberStatus.INACTIVE || memberStatus == MemberStatus.SUSPENDED) {
+        if (status == Status.INACTIVE || status == Status.SUSPENDED) {
             throw new IllegalStateException("Cannot assign role to an inactive membership");
         }
         this.memberRole = newMemberRole;

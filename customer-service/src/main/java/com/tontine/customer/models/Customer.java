@@ -51,7 +51,7 @@ public class Customer {
     private MaritalStatus maritalStatus;
     @NotNull(message = "status required")
     @Enumerated(EnumType.STRING)
-    private MemberStatus memberStatus;
+    private Status status;
     @Valid
     @NotNull(message = "address required")
     @Embedded
@@ -63,10 +63,10 @@ public class Customer {
             String email,
             String phone,
             MaritalStatus maritalStatus,
-            MemberStatus memberStatus,
+            Status status,
             Address address
     ) {
-        if (memberStatus == MemberStatus.SUSPENDED) {
+        if (status == Status.SUSPENDED) {
             throw new IllegalArgumentException("Cannot update profile of a suspended customer");
         }
         this.firstname = firstname;
@@ -74,30 +74,30 @@ public class Customer {
         this.phone = phone;
         this.email = email;
         this.maritalStatus = maritalStatus;
-        this.memberStatus = memberStatus;
+        this.status = status;
         this.address = address;
     }
 
     public void deactivate() {
-        if (memberStatus == MemberStatus.INACTIVE) {
+        if (status == Status.INACTIVE) {
             throw new IllegalArgumentException("Customer already inactive");
-        } else if (memberStatus == MemberStatus.SUSPENDED) {
+        } else if (status == Status.SUSPENDED) {
             throw new IllegalArgumentException("Customer already suspended");
         }
-        this.memberStatus = MemberStatus.INACTIVE;
+        this.status = Status.INACTIVE;
     }
 
     public void suspend() {
-        if (memberStatus == MemberStatus.SUSPENDED) {
+        if (status == Status.SUSPENDED) {
             throw new IllegalArgumentException("Customer already suspended");
         }
-        this.memberStatus = MemberStatus.SUSPENDED;
+        this.status = Status.SUSPENDED;
     }
 
     public void activate() {
-        if (memberStatus == MemberStatus.ACTIVE) {
+        if (status == Status.ACTIVE) {
             throw new IllegalArgumentException("Customer already active");
         }
-        this.memberStatus = MemberStatus.ACTIVE;
+        this.status = Status.ACTIVE;
     }
 }

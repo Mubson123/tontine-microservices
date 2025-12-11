@@ -46,7 +46,7 @@ public class CustomerFixtures {
                 .email("john.doe@example.com")
                 .phone("+1234567890")
                 .maritalStatus(MaritalStatus.SINGLE)
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Anytown")
@@ -70,7 +70,7 @@ public class CustomerFixtures {
                 .email("john.doe@example.com")
                 .phone("+1234567890")
                 .maritalStatus(ApiMaritalStatus.SINGLE)
-                .memberStatus(ApiMemberStatus.ACTIVE)
+                .status(ApiStatus.ACTIVE)
                 .address(new ApiAddress()
                         .street("123 Main St")
                         .city("Anytown")
@@ -113,7 +113,7 @@ public class CustomerFixtures {
                 .email("sophia.Smith@example.com")
                 .phone("+1987654321")
                 .maritalStatus(MaritalStatus.SINGLE)
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .address(Address.builder()
                         .street("456 Elm St")
                         .city("Othertown")
@@ -137,7 +137,7 @@ public class CustomerFixtures {
                 .email("sophia.Smith@example.com")
                 .phone("+1987654321")
                 .maritalStatus(ApiMaritalStatus.SINGLE)
-                .memberStatus(ApiMemberStatus.ACTIVE)
+                .status(ApiStatus.ACTIVE)
                 .address(new ApiAddress()
                         .street("456 Elm St")
                         .city("Othertown")
@@ -153,7 +153,7 @@ public class CustomerFixtures {
                 .email("sophiaS123@email.com")
                 .phone("+1987654321")
                 .maritalStatus(ApiMaritalStatus.MARRIED)
-                .memberStatus(ApiMemberStatus.ACTIVE)
+                .status(ApiStatus.ACTIVE)
                 .address(apiAddress2());
     }
 
@@ -191,7 +191,7 @@ public class CustomerFixtures {
                 .email("john.doe@example") // Invalid email
                 // Birthdate is missing
                 .phone("+1234567890")
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .maritalStatus(MaritalStatus.SINGLE)
                 .address(Address.builder()
                         .street("123 Main St")

@@ -1,6 +1,6 @@
 package com.tontine.customer.models.utils;
 
-public enum MemberStatus {
+public enum Status {
     ACTIVE,
     INACTIVE,
     SUSPENDED

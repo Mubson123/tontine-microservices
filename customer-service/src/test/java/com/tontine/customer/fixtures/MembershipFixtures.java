@@ -1,13 +1,13 @@
 package com.tontine.customer.fixtures;
 
 import com.tontine.customer.model.ApiMemberRole;
-import com.tontine.customer.model.ApiMemberStatus;
+import com.tontine.customer.model.ApiStatus;
 import com.tontine.customer.model.ApiMembershipRequest;
 import com.tontine.customer.model.ApiMembershipResponse;
 import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.Membership;
 import com.tontine.customer.models.utils.MemberRole;
-import com.tontine.customer.models.utils.MemberStatus;
+import com.tontine.customer.models.utils.Status;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,7 +41,7 @@ public class MembershipFixtures {
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.MEMBER)
                 .positionInRotation(3)
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class MembershipFixtures {
                 .joinedAt(LocalDate.now())
                 .memberRole(ApiMemberRole.MEMBER)
                 .positionInRotation(3)
-                .memberStatus(ApiMemberStatus.ACTIVE);
+                .status(ApiStatus.ACTIVE);
     }
 
     public static ApiMembershipRequest membershipRequest12() {
@@ -74,7 +74,7 @@ public class MembershipFixtures {
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.SECRETARY)
                 .positionInRotation(6)
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class MembershipFixtures {
                 .joinedAt(LocalDate.now())
                 .memberRole(ApiMemberRole.SECRETARY)
                 .positionInRotation(6)
-                .memberStatus(ApiMemberStatus.ACTIVE);
+                .status(ApiStatus.ACTIVE);
     }
 
     public static ApiMembershipRequest membershipRequest2() {
@@ -107,7 +107,7 @@ public class MembershipFixtures {
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.MEMBER)
                 .positionInRotation(1)
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .build();
     }
 
@@ -121,7 +121,7 @@ public class MembershipFixtures {
                 .joinedAt(LocalDate.now())
                 .memberRole(ApiMemberRole.MEMBER)
                 .positionInRotation(1)
-                .memberStatus(ApiMemberStatus.ACTIVE);
+                .status(ApiStatus.ACTIVE);
     }
 
     public static List<Membership> membershipListTontine1 = List.of(membership11(), membership2());
