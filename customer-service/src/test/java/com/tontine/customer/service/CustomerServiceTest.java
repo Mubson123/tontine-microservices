@@ -45,7 +45,7 @@ class CustomerServiceTest {
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
         verify(customerRepository).findAll();
         verify(customerMapper).toApiCustomerResponses(customers);
     }
@@ -61,7 +61,7 @@ class CustomerServiceTest {
         ApiCustomerResponse actual = customerService.getCustomerById(customerId);
 
         assertNotNull(actual);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
         verify(customerRepository).findById(customerId);
         verify(customerMapper).toApiCustomerResponse(customer);
     }
@@ -95,7 +95,7 @@ class CustomerServiceTest {
         ApiCustomerResponse actual = customerService.createCustomer(customerRequest);
 
         assertNotNull(actual);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
         verify(customerMapper).toCustomer(customerRequest);
         verify(customerRepository).save(customer);
         verify(customerMapper).toApiCustomerResponse(customer);
@@ -116,7 +116,7 @@ class CustomerServiceTest {
         ApiCustomerResponse actual = customerService.updateCustomer(customerId, customerRequest);
 
         assertNotNull(actual);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
         verify(customerRepository).findById(customerId);
         verify(customerMapper).updateCustomerFromRequest(customerRequest, customer);
         verify(customerMapper).toApiCustomerResponse(customer);
@@ -204,7 +204,7 @@ class CustomerServiceTest {
 
         customerService.activateCustomer(customerId);
 
-        assertEquals(customer.getMemberStatus().name(), MemberStatus.ACTIVE.name());
+        assertEquals(MemberStatus.ACTIVE.name(), customer.getMemberStatus().name());
         verify(customerRepository).findById(customerId);
         verify(customerRepository).save(customer);
     }
@@ -235,7 +235,7 @@ class CustomerServiceTest {
 
         customerService.deactivateCustomer(customerId);
 
-        assertEquals(customer.getMemberStatus().name(), MemberStatus.INACTIVE.name());
+        assertEquals(MemberStatus.INACTIVE.name(), customer.getMemberStatus().name());
         verify(customerRepository).findById(customerId);
         verify(customerRepository).save(customer);
     }
