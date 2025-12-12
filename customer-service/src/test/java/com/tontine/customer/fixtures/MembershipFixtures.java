@@ -4,7 +4,6 @@ import com.tontine.customer.model.ApiMemberRole;
 import com.tontine.customer.model.ApiStatus;
 import com.tontine.customer.model.ApiMembershipRequest;
 import com.tontine.customer.model.ApiMembershipResponse;
-import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.Membership;
 import com.tontine.customer.models.utils.MemberRole;
 import com.tontine.customer.models.utils.Status;
@@ -20,23 +19,18 @@ public class MembershipFixtures {
     }
     public static final UUID membershipId1 = UUID.randomUUID();
     public static final UUID membershipId2 = UUID.randomUUID();
-    public static final Customer customer1 = CustomerFixtures.customer1();
-    public static final Customer customer2 = CustomerFixtures.customer2();
+    public static final UUID customerId1 = UUID.randomUUID();
+    public static final UUID customerId2 = UUID.randomUUID();
     public static final UUID tontineId1 = UUID.randomUUID();
     public static final UUID tontineId2 = UUID.randomUUID();
 
-    public static ApiMembershipRequest membershipRequest11() {
-        return new ApiMembershipRequest()
-                .memberRole(ApiMemberRole.MEMBER)
-                .positionInRotation(3);
-    }
 
     public static Membership membership11() {
         return Membership.builder()
                 .id(membershipId1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .customer(customer1)
+                .customerId(customerId1)
                 .tontineId(tontineId1)
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.MEMBER)
@@ -50,7 +44,7 @@ public class MembershipFixtures {
                 .id(membershipId1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .customerId(customer1.getId())
+                .customerId(customerId1)
                 .tontineId(tontineId1)
                 .joinedAt(LocalDate.now())
                 .memberRole(ApiMemberRole.MEMBER)
@@ -69,7 +63,7 @@ public class MembershipFixtures {
                 .id(membershipId1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .customer(customer1)
+                .customerId(customerId1)
                 .tontineId(tontineId2)
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.SECRETARY)
@@ -83,7 +77,7 @@ public class MembershipFixtures {
                 .id(membershipId1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .customerId(customer1.getId())
+                .customerId(customerId1)
                 .tontineId(tontineId2)
                 .joinedAt(LocalDate.now())
                 .memberRole(ApiMemberRole.SECRETARY)
@@ -102,7 +96,7 @@ public class MembershipFixtures {
                 .id(membershipId2)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .customer(customer2)
+                .customerId(customerId2)
                 .tontineId(tontineId1)
                 .joinedAt(LocalDate.now())
                 .memberRole(MemberRole.MEMBER)
@@ -116,7 +110,7 @@ public class MembershipFixtures {
                 .id(membershipId2)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .customerId(customer2.getId())
+                .customerId(customerId2)
                 .tontineId(tontineId1)
                 .joinedAt(LocalDate.now())
                 .memberRole(ApiMemberRole.MEMBER)

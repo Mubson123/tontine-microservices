@@ -30,10 +30,7 @@ public class Membership {
     @LastModifiedDate
     private LocalDateTime updatedAt;
     @NotNull(message = "customer required")
-    @ToString.Exclude
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    private Customer customer;
+    private UUID customerId;
     @NotNull(message = "Tontine ID required")
     private UUID tontineId;
     @NotNull(message = "Join date required")

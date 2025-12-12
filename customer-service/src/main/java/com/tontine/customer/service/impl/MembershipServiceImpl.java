@@ -1,15 +1,12 @@
 package com.tontine.customer.service.impl;
 
-import com.tontine.customer.exception.CustomerNotFoundException;
 import com.tontine.customer.exception.MembershipNotFoundException;
 import com.tontine.customer.mapper.MembershipMapper;
 import com.tontine.customer.model.ApiMembershipRequest;
 import com.tontine.customer.model.ApiMembershipResponse;
-import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.Membership;
 import com.tontine.customer.models.utils.MemberRole;
 import com.tontine.customer.models.utils.Status;
-import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.repository.MembershipRepository;
 import com.tontine.customer.service.MembershipService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +23,6 @@ import java.util.UUID;
 public class MembershipServiceImpl implements MembershipService {
     private static final String MEMBERSHIP_NOT_FOUND = "Membership with ID %s not found";
     private final MembershipRepository membershipRepository;
-    private final CustomerRepository customerRepository;
     private final MembershipMapper membershipMapper;
 
     @Override
@@ -38,7 +34,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public List<ApiMembershipResponse> getAllMembership(UUID tontineId) {
         List<Membership> membershipList = membershipRepository
-                .findByTontineId(tontineId);
+                .findAllByTontineId(tontineId);
         return membershipMapper.toApiMembershipList(membershipList);
     }
 
@@ -54,11 +50,8 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     @Transactional
     public ApiMembershipResponse createMembership(UUID tontineId, UUID customerId, ApiMembershipRequest membershipRequest) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer with ID %s not found".formatted(customerId)));
-
         Membership membership = membershipMapper.toMembership(membershipRequest);
-        membership.setCustomer(customer);
+        membership.setCustomerId(customerId);
         membership.setTontineId(tontineId);
         membership.setJoinedAt(LocalDate.now());
         membership.setCreatedAt(LocalDateTime.now());
