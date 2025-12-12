@@ -1,9 +1,7 @@
 package com.tontine.customer.constraint;
 
 import com.tontine.customer.fixtures.CustomerFixtures;
-import com.tontine.customer.fixtures.MembershipFixtures;
 import com.tontine.customer.models.Customer;
-import com.tontine.customer.models.Membership;
 import com.tontine.customer.models.utils.Address;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -57,21 +55,6 @@ class ConstraintViolationTest {
                         "state required or must have at least 2 characters",
                         "zipCode must be a 5-digit number",
                         "country " + REQUIRED
-                );
-    }
-
-    @Test
-    void shouldDetectConstraintViolationsOnMembershipFields() {
-        Membership wrongMembership = MembershipFixtures.wrongMembership();
-
-        Set<ConstraintViolation<Membership>> violations = validator.validate(wrongMembership);
-        assertThat(violations)
-                .hasSize(3)
-                .extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder(
-                        "customer required",
-                        "member status required",
-                        "position in rotation must be greater than 0"
                 );
     }
 }

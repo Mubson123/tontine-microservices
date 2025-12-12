@@ -14,8 +14,6 @@ tags:
     description: Customer Service REST Endpoints
   - name: Admin Customer Controller
     description: Admin Service REST Endpoints
-  - name: Membership Controller
-    description: Membership Service REST Endpoints
 
 paths:
   /customers:
@@ -430,68 +428,6 @@ components:
           type: string
           example: 'USA'
 
-    MembershipRequest:
-      type: object
-      required:
-        - memberRole
-        - positionInRotation
-      properties:
-        memberRole:
-          $ref: '#/components/schemas/MemberRole'
-        positionInRotation:
-          type: integer
-          example: 1
-
-    MembershipResponse:
-      type: object
-      required:
-        - id
-        - createdAt
-        - updatedAt
-        - customerId
-        - tontineId
-        - joinedAt
-        - memberRole
-        - positionInRotation
-        - status
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: '123e4567-e89b-12d3-a456-426614174000'
-        createdAt:
-          type: string
-          format: date-time
-          example: '2023-01-01T12:00:00Z'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2023-01-02T12:00:00Z'
-        customerId:
-          type: string
-          format: uuid
-          example: '123e4567-e89b-12d3-a456-426614174000'
-        tontineId:
-          type: string
-          format: uuid
-          example: '123e4567-e89b-12d3-a456-426614174001'
-        joinedAt:
-            type: string
-            format: date
-            example: '2023-01-01'
-        leftAt:
-            type: string
-            format: date
-            nullable: true
-            example: '2024-01-01'
-        memberRole:
-          $ref: '#/components/schemas/MemberRole'
-        positionInRotation:
-          type: integer
-          example: 1
-        status:
-          $ref: '#/components/schemas/Status'
-
     StatusResponse:
       type: object
       properties:
@@ -528,25 +464,6 @@ components:
         - FEMALE
         - OTHER
       example: MALE
-
-    MemberRole:
-      type: string
-      enum:
-        - ADMIN
-        - GUEST
-        - PRESIDENT
-        - VICE_PRESIDENT
-        - SECRETARY
-        - VICE_SECRETARY
-        - TREASURER
-        - VICE_TREASURER
-        - SENSOR
-        - VICE_SENSOR
-        - MEMBER
-        - ASSOCIATE
-        - FOUNDER
-      description: Position of the user in the system
-      example: MEMBER
 
     Status:
         type: string
@@ -594,16 +511,6 @@ components:
         type: string
         format: uuid
         example: '123e4567-e89b-12d3-a456-426614174000'
-
-    membershipId:
-      name: membershipId
-      in: path
-      required: true
-      description: Unique identifier for the Membership
-      schema:
-        type: string
-        format: uuid
-        example: '123e4567-e89b-12d3-a456-426614174001'
 
 
   responses:
