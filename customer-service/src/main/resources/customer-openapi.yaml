@@ -561,7 +561,6 @@ components:
       required:
         - timestamp
         - status
-        - error
         - message
         - path
       properties:
@@ -572,20 +571,17 @@ components:
         status:
           type: integer
           example: 400
-        error:
-          type: string
-          example: Bad Request
         path:
           type: string
-          example: /api/customers
+          example: /api/to/path
         message:
           type: string
           example: An unexpected error occurred
-        fieldErrors:
+        errors:
           type: object
           description: Field-specific errors
           additionalProperties:
-            type: string
+            type: object
 
 
   parameters:
