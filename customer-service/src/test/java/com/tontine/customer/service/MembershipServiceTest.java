@@ -5,9 +5,7 @@ import com.tontine.customer.fixtures.MembershipFixtures;
 import com.tontine.customer.mapper.MembershipMapper;
 import com.tontine.customer.model.ApiMembershipRequest;
 import com.tontine.customer.model.ApiMembershipResponse;
-import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.Membership;
-import com.tontine.customer.repository.CustomerRepository;
 import com.tontine.customer.repository.MembershipRepository;
 import com.tontine.customer.service.impl.MembershipServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -28,8 +26,6 @@ class MembershipServiceTest {
 
     @Mock
     private MembershipRepository membershipRepository;
-    @Mock
-    private CustomerRepository customerRepository;
     @Mock
     private MembershipMapper membershipMapper;
     @InjectMocks
@@ -57,7 +53,7 @@ class MembershipServiceTest {
         List<ApiMembershipResponse> expected =
                 MembershipFixtures.membershipResponseListTontine1;
         UUID tontineId1 = MembershipFixtures.tontineId1;
-        when(membershipRepository.findByTontineId(tontineId1)).thenReturn(membershipListTontine);
+        when(membershipRepository.findAllByTontineId(tontineId1)).thenReturn(membershipListTontine);
         when(membershipMapper.toApiMembershipList(membershipListTontine)).thenReturn(expected);
 
         List<ApiMembershipResponse> actual = membershipService.getAllMembership(tontineId1);
@@ -65,7 +61,7 @@ class MembershipServiceTest {
         assertNotNull(actual);
         assertEquals(2,actual.size());
         assertEquals(expected, actual);
-        verify(membershipRepository).findByTontineId(tontineId1);
+        verify(membershipRepository).findAllByTontineId(tontineId1);
         verify(membershipMapper).toApiMembershipList(membershipListTontine);
     }
 
@@ -109,15 +105,13 @@ class MembershipServiceTest {
 
     @Test
     void shouldCreateMembershipSuccessfully() {
-        Customer customer = MembershipFixtures.customer2;
-        UUID customerId = customer.getId();
+        UUID customerId = MembershipFixtures.customerId2;
         UUID tontineId1 = MembershipFixtures.tontineId1;
         ApiMembershipRequest membershipRequest = MembershipFixtures.membershipRequest2();
 
         Membership membership = MembershipFixtures.membership2();
         ApiMembershipResponse expected = MembershipFixtures.membershipResponse2();
 
-        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
         when(membershipMapper.toMembership(membershipRequest)).thenReturn(membership);
         when(membershipRepository.save(membership)).thenReturn(membership);
         when(membershipMapper.toApiMembership(membership)).thenReturn(expected);
@@ -126,7 +120,6 @@ class MembershipServiceTest {
 
         assertNotNull(actual);
         assertEquals(expected, actual);
-        verify(customerRepository).findById(customerId);
         verify(membershipMapper).toMembership(membershipRequest);
         verify(membershipRepository).save(membership);
         verify(membershipMapper).toApiMembership(membership);
