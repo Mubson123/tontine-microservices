@@ -12,20 +12,7 @@
 	<artifactId>customer-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>customer-service</name>
-	<description>Service For Tontine&apos;s Customers</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<description>Tontine Service For Customers</description>
 	<properties>
 		<java.version>21</java.version>
 		<grpc.version>1.77.0</grpc.version>
