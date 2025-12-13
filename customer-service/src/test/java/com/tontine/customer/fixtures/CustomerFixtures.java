@@ -14,6 +14,10 @@ public class CustomerFixtures {
         throw new IllegalStateException(CustomerFixtures.class.getName());
     }
 
+    public static UUID customerId1 = UUID.randomUUID();
+    public static UUID customerId2 = UUID.randomUUID();
+
+
     public static ApiCustomerRequest apiCustomerRequest1() {
         return new ApiCustomerRequest()
                 .title(ApiTitle.BSC)
@@ -23,6 +27,7 @@ public class CustomerFixtures {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .email("john.doe@example.com")
                 .phone("+1234567890")
+                .status(ApiStatus.ACTIVE)
                 .maritalStatus(ApiMaritalStatus.SINGLE)
                 .address(new ApiAddress()
                         .street("123 Main St")
@@ -35,7 +40,7 @@ public class CustomerFixtures {
 
     public static Customer customer1() {
         return Customer.builder()
-                .id(UUID.randomUUID())
+                .id(customerId1)
                 .createdAt(LocalDateTime.of(2023, 8, 14, 10, 50))
                 .updatedAt(LocalDateTime.of(2024, 5, 6, 15, 37))
                 .title(Title.BSC)
@@ -59,7 +64,7 @@ public class CustomerFixtures {
 
     public static ApiCustomerResponse apiCustomerResponse1() {
         return new ApiCustomerResponse()
-                .id(UUID.randomUUID())
+                .id(customerId1)
                 .createdAt(LocalDateTime.of(2023, 8, 14, 10, 50))
                 .updatedAt(LocalDateTime.of(2024, 5, 6, 15, 37))
                 .title(ApiTitle.BSC)
@@ -89,6 +94,7 @@ public class CustomerFixtures {
                 .birthdate(LocalDate.of(1985, 7, 20))
                 .email("sophia.Smith@example.com")
                 .phone("+1987654321")
+                .status(ApiStatus.ACTIVE)
                 .maritalStatus(ApiMaritalStatus.SINGLE)
                 .address(new ApiAddress()
                         .street("456 Elm St")
@@ -102,7 +108,7 @@ public class CustomerFixtures {
 
     public static Customer customer2() {
         return Customer.builder()
-                .id(UUID.randomUUID())
+                .id(customerId2)
                 .createdAt(LocalDateTime.of(2023, 8, 10, 12, 25))
                 .updatedAt(LocalDateTime.of(2024, 5, 6, 15, 16))
                 .title(Title.MSC)
@@ -126,7 +132,7 @@ public class CustomerFixtures {
 
     public static ApiCustomerResponse apiCustomerResponse2() {
         return new ApiCustomerResponse()
-                .id(UUID.randomUUID())
+                .id(customerId2)
                 .createdAt(LocalDateTime.of(2023, 8, 10, 12, 25))
                 .updatedAt(LocalDateTime.of(2024, 5, 6, 15, 37))
                 .title(ApiTitle.MSC)
