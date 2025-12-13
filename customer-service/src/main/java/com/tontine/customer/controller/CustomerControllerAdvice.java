@@ -2,7 +2,6 @@ package com.tontine.customer.controller;
 
 import com.tontine.customer.exception.CustomerAlreadyExistsException;
 import com.tontine.customer.exception.CustomerNotFoundException;
-import com.tontine.customer.exception.MembershipNotFoundException;
 import com.tontine.customer.model.ApiError;
 import jakarta.validation.ConstraintViolationException;
 import org.jspecify.annotations.NonNull;
@@ -30,7 +29,7 @@ public class CustomerControllerAdvice {
                 .status(HttpStatus.METHOD_NOT_ALLOWED.value())
                 .path(request.getDescription(false))
                 .message(ex.getLocalizedMessage());
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(apiError);
     }
 
     @ExceptionHandler(MethodNotAllowedException.class)
@@ -41,7 +40,7 @@ public class CustomerControllerAdvice {
                 .status(HttpStatus.METHOD_NOT_ALLOWED.value())
                 .path(request.getDescription(false))
                 .message(ex.getLocalizedMessage());
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(apiError);
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -112,7 +111,7 @@ public class CustomerControllerAdvice {
                 .status(HttpStatus.CONFLICT.value())
                 .path(request.getDescription(false))
                 .message(ex.getLocalizedMessage());
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
@@ -123,17 +122,6 @@ public class CustomerControllerAdvice {
                 .status(HttpStatus.NOT_FOUND.value())
                 .path(request.getDescription(false))
                 .message(ex.getLocalizedMessage());
-        return ResponseEntity.badRequest().body(apiError);
-    }
-
-    @ExceptionHandler(MembershipNotFoundException.class)
-    public ResponseEntity<ApiError> handleMembershipNotFound(@NonNull MembershipNotFoundException ex,
-                                                             @NonNull WebRequest request) {
-        ApiError apiError = new ApiError()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .path(request.getDescription(false))
-                .message(ex.getLocalizedMessage());
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 }

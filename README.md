@@ -54,54 +54,56 @@ The project follows a modern microservice-based architecture:
 
 - **Gateway Service** — entry point for all requests    
 - **Config Service** — centralized configuration  
-- **Customer Service** — members, roles & authentication  
+- **Customer Service** —  roles, Profiles & authentication 
+- **Member Service** — manage memberships, roles, events
 - **Tontine Service** — tontine creation, structure & management  
 - **Session Service** — meetings, agendas, summaries  
+- **Beneficiary Service** — manage beneficiaries
 - **Contribution Service** — payments, rotations, beneficiary logic  
 - **Notification Service** — reminders & updates (email/SMS)  
 - **Common Libraries** — shared DTOs, utilities & exceptions  
 
 ```bash
+                                          +------------------------------+
+                                          |        API Gateway           |
+                                          | (Routing, Auth, Rate Limit)  |
+                                          +--------------+---------------+
+                                                         |
+                                                         v
+                 -----------------------------------------------------------------------------------
+                 |                                Kubernetes Cluster                               |
+                 -----------------------------------------------------------------------------------
+                  |                   |                   |                    |                 |
+                  v                   v                   v                    v                 v
 
-                             +------------------------------+
-                             |        API Gateway           |
-                             | (Routing, Auth, Rate Limit)  |
-                             +--------------+---------------+
-                                            |
-                                            v
-                 -----------------------------------------------------------
-                 |                 Kubernetes Cluster                      |
-                 -----------------------------------------------------------
-                   |                   |                |                |
-                   v                   v                v                v
+     +---------------------+  +----------------+  +----------------+  +----------------+  +-----------------+
+     |  Customer Service   |  |  Tontine       |  |   Session      |  | Contribution   |  | Member Service  |
+     |---------------------|  |   Service      |  |   Service      |  |   Service      |  |-----------------|
+     | + Manage customers  |  |----------------|  |----------------|  |----------------|  | + Manage        |
+     | + Roles & profiles  |  | + Create       |  | + Agenda mgmt  |  | + Register     |  |   memberships   |
+     | + Authentication    |  |   tontines     |  | + Attendance   |  |   payments     |  | + Rotation      |
+     |   (JWT/Keycloak)    |  | + Members      |  | + Summary      |  | + Rotation     |  |   ordering      |
+     +----------+----------+  | + Bureau       |  |   history      |  |   logic        |  | + Roles (bureau)|
+                |             +--------+-------+  +--------+-------+  +--------+-------+  | + Member events |
+                |                      |                   |                   |           +--------+-------+
+                |                      v                   |                   v                    |
+                |            +----------------+            |         +----------------+             |
+                |            | Beneficiary    |            |         | Notification   |             |
+                |            |   Service      |            |         |   Service      |             |
+                |            |----------------|            |         |----------------|             |
+                |            | + Select next  |            |         | + Emails       |             |
+                |            |   beneficiary  |            |         | + SMS          |             |
+                |            +--------+-------+            |         +--------+-------+             |
+                |                     |                    |                  |                     |
+                |                     |                    |                  |                     |
+                |---------------------|--------------------|------------------|---------------------|
+                                                           |
+                                                           v
+                                               +------------------------+
+                                               |      Event Bus         |
+                                               |  (Kafka / RabbitMQ)    |
+                                               +------------------------+
 
-     +---------------------+  +----------------+  +----------------+  +----------------+
-     |  Customer Service   |  |  Tontine       |  |   Session      |  | Contribution   |
-     |---------------------|  |   Service      |  |   Service      |  |   Service      |
-     | + Manage customers  |  |----------------|  |----------------|  |----------------|
-     | + Roles & profiles  |  | + Create       |  | + Agenda mgmt  |  | + Register     |
-     | + Authentication    |  |   tontines     |  | + Attendance   |  |   payments     |
-     |   (JWT/Keycloak)    |  | + Members      |  | + Summary      |  | + Rotation     |
-     +----------+----------+  | + Bureau       |  |   history      |  |   logic        |
-                |             +--------+-------+  +--------+-------+  +--------+-------+
-                |                      |                   |                   |
-                |                      v                   |                   v
-                |            +----------------+            |         +----------------+
-                |            | Beneficiary    |            |         | Notification   |
-                |            |   Service      |            |         |   Service      |
-                |            |----------------|            |         |----------------|
-                |            | + Select next  |            |         | + Emails       |
-                |            |   beneficiary  |            |         | + SMS          |
-                |            +--------+-------+            |         +--------+-------+
-                |                     |                    |                  |
-                |                     |                    |                  |
-                |---------------------|--------------------|------------------|
-                                      |
-                                      v
-                           +------------------------+
-                           |      Event Bus         |
-                           |  (Kafka / RabbitMQ)    |
-                           +------------------------+
 ```
 ---
 
