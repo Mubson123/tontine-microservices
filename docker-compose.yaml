@@ -4,11 +4,11 @@ networks:
 
 services:
 
-  customer-db:
+  customer_database:
     image: mysql:latest
-    container_name: customer-db
+    container_name: customer_database
     restart: always
-    env_file:
+    env_file: 
       - .env
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
@@ -19,7 +19,7 @@ services:
       MYSQL_DATABASE: ${CUSTOMER_DATABASE}
       MYSQL_USER: ${CUSTOMER_USERNAME}
       MYSQL_PASSWORD: ${CUSTOMER_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${CUSTOMER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${CUSTOMER_ROOT_PASSWORD}
       MYSQL_ALLOW_EMPTY_PASSWORD: no
     networks:
       - bubble
@@ -27,6 +27,27 @@ services:
       - "3308:3306"
     volumes:
       - customer_data:/var/lib/mysql
+
+  customer_service:
+    image: tontine/customer_service:lts
+    container_name: customer_service
+    env_file:
+      - .env
+    build:
+      context: ./customer-service/
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${CUSTOMER_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${CUSTOMER_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${CUSTOMER_PASSWORD}
+    depends_on:
+      customer_database:
+        condition: service_healthy
+    networks:
+      - bubble
+    ports:
+      - "6061:6061"
 
 volumes:
   customer_data:
