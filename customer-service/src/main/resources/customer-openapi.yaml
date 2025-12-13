@@ -4,7 +4,7 @@ info:
   description: Customer Service For Tontine Application
   version: 1.0.0
 servers:
-  - url: 'http://localhost:7071/api'
+  - url: 'http://localhost:6061/api'
 
 security:
   - bearerAuth: [ ]
