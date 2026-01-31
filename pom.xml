@@ -13,6 +13,7 @@
 
     <modules>
         <module>customer-service</module>
+        <module>oauth-service</module>
     </modules>
 
     <properties>
