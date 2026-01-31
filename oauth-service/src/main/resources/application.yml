@@ -1,0 +1,20 @@
+server:
+  port: 6062
+
+spring:
+  application:
+    name: oauth-service
+
+jwt:
+  expiration-time: 36000000
+  refresh-expiration-time: 86400000
+  secret: ${JWT_SECRET:flpZVEZrUG1ORD01Y2MxInkyP2oiQFFqeTN0TXk4NTk=}
+
+logging:
+  level:
+    org:
+      springframework:
+        security: info
+        web: info
+    root: info
+
