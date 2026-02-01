@@ -46,6 +46,8 @@ public class User implements Serializable {
     private String password;
     @Enumerated(EnumType.STRING)
     Role role;
+    private boolean isEnabled = false;
+    private boolean mustChangePassword = false;
 
     public User(String firstname, String lastname, String email, String password, Role role) {
         this.firstname = firstname;

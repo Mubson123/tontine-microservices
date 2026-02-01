@@ -4,17 +4,56 @@ networks:
 
 services:
 
-  customer_database:
-    image: mysql:latest
-    container_name: customer_database
+  rabbitmq:
+    image: rabbitmq:3-management
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    container_name: rabbitmq
     restart: always
-    env_file: 
+    env_file:
       - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - bubble
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  oauth_db:
+    image: postgres:16-alpine
+    container_name: oauth_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${AUTH_DATABASE}
+      POSTGRES_USER: ${AUTH_USERNAME}
+      POSTGRES_PASSWORD: ${AUTH_PASSWORD}
+    networks:
+      - bubble
+    ports:
+      - "5434:5432"
+    volumes:
+      - oauth_data:/var/lib/postgresql/data
+
+  customer_db:
+    image: mysql:latest
+    container_name: customer_db
+    restart: always
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 5s
       timeout: 3s
       retries: 10
+    env_file:
+      - .env
     environment:
       MYSQL_DATABASE: ${CUSTOMER_DATABASE}
       MYSQL_USER: ${CUSTOMER_USERNAME}
@@ -24,7 +63,7 @@ services:
     networks:
       - bubble
     ports:
-      - "3308:3306"
+      - "3309:3306"
     volumes:
       - customer_data:/var/lib/mysql
 
@@ -38,17 +77,47 @@ services:
       dockerfile: Dockerfile
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATASOURCE_URL: ${CUSTOMER_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${CUSTOMER_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${CUSTOMER_PASSWORD}
     depends_on:
-      customer_database:
-        condition: service_healthy
+      rabbitmq:
+         condition: service_healthy
+      customer_db:
+         condition: service_healthy
     networks:
       - bubble
     ports:
       - "6061:6061"
 
+  oauth_service:
+    image: tontine/oauth_service:lts
+    container_name: oauth_service
+    env_file:
+      - .env
+    build:
+      context: ./oauth-service/
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: ${AUTH_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${AUTH_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${AUTH_PASSWORD}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      oauth_db:
+        condition: service_started
+    networks:
+      - bubble
+    ports:
+      - "6062:6062"
+
+
 volumes:
   customer_data:
+  rabbitmq_data:
+  oauth_data:
 

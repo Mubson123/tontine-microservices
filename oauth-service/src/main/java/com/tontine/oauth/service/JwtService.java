@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.Instant;
 import java.util.Date;
 
 @Slf4j
@@ -42,6 +43,12 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userEmail = extractUsername(token);
         return (userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public Instant extractExpirationInstant(String token) {
+        return extractAllClaims(token)
+                .getExpiration()
+                .toInstant();
     }
 
     private String buildToken(UserDetails userDetails, Long expiration) {

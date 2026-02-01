@@ -4,3 +4,27 @@ server:
 spring:
   application:
     name: customer-service
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        acknowledge-mode: auto
+        retry:
+          enabled: true
+          max-retries: 5
+
+logging:
+  level:
+    org:
+      springframework:
+        security: info
+        web: info
+        amqp:
+          rabbit:
+            core:
+              RabbitTemplate: debug
+    root: info
