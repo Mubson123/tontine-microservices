@@ -16,10 +16,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static com.tontine.customer.constance.Constance.CUSTOMER_CREATED;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     private static final String CUSTOMER_NOT_FOUND = "Customer with ID %s not found";
+    private final CustomerEventPublisher eventPublisher;
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
@@ -43,7 +46,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerMapper.toCustomer(apiCustomerRequest);
         customer.setCreatedAt(LocalDateTime.now());
         customer.setUpdatedAt(LocalDateTime.now());
-        customer = customerRepository.save(customer);
+        customerRepository.save(customer);
+        eventPublisher.publishCustomerEvent(customer, CUSTOMER_CREATED);
         return customerMapper.toApiCustomerResponse(customer);
     }
 
@@ -52,9 +56,9 @@ public class CustomerServiceImpl implements CustomerService {
     public ApiCustomerResponse updateCustomer(UUID customerId, ApiCustomerRequest apiCustomerRequest) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND.formatted(customerId)));
-            customerMapper.updateCustomerFromRequest(apiCustomerRequest, customer);
-            customer.setUpdatedAt(LocalDateTime.now());
-            customer = customerRepository.save(customer);
+        customerMapper.updateCustomerFromRequest(apiCustomerRequest, customer);
+        customer.setUpdatedAt(LocalDateTime.now());
+        customerRepository.save(customer);
         return customerMapper.toApiCustomerResponse(customer);
     }
 

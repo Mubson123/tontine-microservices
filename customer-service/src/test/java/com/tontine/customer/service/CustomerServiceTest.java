@@ -8,6 +8,7 @@ import com.tontine.customer.models.Customer;
 import com.tontine.customer.models.utils.Address;
 import com.tontine.customer.models.utils.Status;
 import com.tontine.customer.repository.CustomerRepository;
+import com.tontine.customer.service.impl.CustomerEventPublisher;
 import com.tontine.customer.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,8 @@ class CustomerServiceTest {
     private CustomerRepository customerRepository;
     @Mock
     private CustomerMapper customerMapper;
+    @Mock
+    CustomerEventPublisher eventPublisher;
     @InjectMocks
     private CustomerServiceImpl customerService;
 
@@ -90,6 +93,7 @@ class CustomerServiceTest {
 
         when(customerMapper.toCustomer(customerRequest)).thenReturn(customer);
         when(customerRepository.save(customer)).thenReturn(customer);
+        doNothing().when(eventPublisher).publishCustomerEvent(customer, "customer.created");
         when(customerMapper.toApiCustomerResponse(customer)).thenReturn(expected);
 
         ApiCustomerResponse actual = customerService.createCustomer(customerRequest);
