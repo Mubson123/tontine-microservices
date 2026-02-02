@@ -1,4 +1,4 @@
-package com.tontine.oauth.config;
+package com.tontine.auth.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;

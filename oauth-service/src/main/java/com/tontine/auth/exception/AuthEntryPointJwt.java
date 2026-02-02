@@ -1,4 +1,4 @@
-package com.tontine.oauth.exception;
+package com.tontine.auth.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

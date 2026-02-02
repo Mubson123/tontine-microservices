@@ -1,6 +1,6 @@
-package com.tontine.oauth.repository;
+package com.tontine.auth.repository;
 
-import com.tontine.oauth.models.User;
+import com.tontine.auth.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

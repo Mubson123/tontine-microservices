@@ -1,4 +1,4 @@
-package com.tontine.oauth.service;
+package com.tontine.auth.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -49,6 +49,14 @@ public class JwtService {
         return extractAllClaims(token)
                 .getExpiration()
                 .toInstant();
+    }
+
+    public Integer extractExpirationInMinutes(String token) {
+        Date expirationDate = extractAllClaims(token).getExpiration();
+        long nowMillis = System.currentTimeMillis();
+        long expMillis = expirationDate.getTime();
+        long diffMillis = expMillis - nowMillis;
+        return (int) (diffMillis / (1000 * 60));
     }
 
     private String buildToken(UserDetails userDetails, Long expiration) {

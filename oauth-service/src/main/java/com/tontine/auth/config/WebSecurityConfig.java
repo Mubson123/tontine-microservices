@@ -1,7 +1,7 @@
-package com.tontine.oauth.config;
+package com.tontine.auth.config;
 
-import com.tontine.oauth.exception.AuthEntryPointJwt;
-import com.tontine.oauth.filter.JwtAuthenticationFilter;
+import com.tontine.auth.exception.AuthEntryPointJwt;
+import com.tontine.auth.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/auth/login", "/api/auth/refresh", "/api/auth/logout-all", "/api/auth/password/reset**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/customers").permitAll()
                         .requestMatchers("/health", "/health/**", "/info", "/info/**").permitAll()
                         .requestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

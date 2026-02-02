@@ -1,4 +1,4 @@
-package com.tontine.oauth.models;
+package com.tontine.auth.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -11,6 +11,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static com.tontine.auth.constance.Constance.REGEX;
 
 @Entity
 @Table(name = "users")
@@ -37,7 +39,7 @@ public class User implements Serializable {
     @NotBlank(message = "Lastname is required")
     private String lastname;
     @NotBlank(message = "Email is required")
-    @Email(message = "Email format not correct", regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+    @Email(message = "Email format not correct", regexp = REGEX)
     @Column(unique = true, nullable = false)
     private String email;
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -46,7 +48,9 @@ public class User implements Serializable {
     private String password;
     @Enumerated(EnumType.STRING)
     Role role;
+    @Builder.Default
     private boolean isEnabled = false;
+    @Builder.Default
     private boolean mustChangePassword = false;
 
     public User(String firstname, String lastname, String email, String password, Role role) {
