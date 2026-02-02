@@ -1,7 +1,7 @@
-package com.tontine.oauth.filter;
+package com.tontine.auth.filter;
 
-import com.tontine.oauth.service.CustomUserDetailsService;
-import com.tontine.oauth.service.JwtService;
+import com.tontine.auth.service.CustomUserDetailsService;
+import com.tontine.auth.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

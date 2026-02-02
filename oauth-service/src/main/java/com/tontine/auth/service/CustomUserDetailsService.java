@@ -1,7 +1,7 @@
-package com.tontine.oauth.service;
+package com.tontine.auth.service;
 
-import com.tontine.oauth.models.User;
-import com.tontine.oauth.repository.UserRepository;
+import com.tontine.auth.models.User;
+import com.tontine.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

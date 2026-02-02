@@ -1,13 +1,12 @@
 openapi: 3.1.0
 info:
-  title: Customer Service
-  description: Customer Service For Tontine Application
+  title: Customer Service API
   version: 1.0.0
+  description: API for Customer Service For Tontine Application
+  
 servers:
   - url: 'http://localhost:6061/api'
-
-security:
-  - bearerAuth: [ ]
+    description: Local development server
 
 tags:
   - name: Customer Controller

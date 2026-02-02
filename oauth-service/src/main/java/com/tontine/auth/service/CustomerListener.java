@@ -1,8 +1,8 @@
-package com.tontine.oauth.service;
+package com.tontine.auth.service;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tontine.customer.proto.CustomerEvent;
-import com.tontine.oauth.config.RabbitConfig;
+import com.tontine.auth.config.RabbitConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
